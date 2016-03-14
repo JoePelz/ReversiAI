@@ -21,24 +21,7 @@ namespace OthelloAI {
         private void gameClick(object sender, GamePanel.BoardClick e) {
             int index = e.x | e.y << 3;
 
-            #region Validate
-            //validate the click is okay.
-            //Don't allow play if square is already taken.
-            if (state.squares[index] > 0) {
-                return;
-            }
-            bool any = false;
-            for (int dx = -1; dx < 2; dx++) {
-                for (int dy = -8; dy <= 8; dy += 8) {
-                    //if (dx == 0 && dy == 0) continue;
-                    if (index + dx + dy >= 0 && index + dx + dy < 64 && state.squares[index + dx + dy] == (state.nextTurn ^ 3)) {
-                        any = true;
-                        break;
-                    }
-                }
-            }
-            if (!any) return;
-            #endregion Validate
+            if (!GameState.validMove(state, state.nextTurn, e.x, e.y)) return;
 
             //update clicked square
             state.squares[index] = state.nextTurn;
@@ -150,8 +133,26 @@ namespace OthelloAI {
             #endregion Cascade
 
             //switch players
-            state.nextTurn = (byte)(state.nextTurn ^ 3);
+            //check if the next player can actually go
+            byte[] moves = GameState.getValidMoves(state, (byte)(state.nextTurn ^ 3));
+            if (moves.Any((v) => { return v != 0; })) {
+                state.nextTurn = (byte)(state.nextTurn ^ 3);
+            }
+
             panel1.updateBoard(state);
+            if (state.nextTurn == 1) {
+                panel2.ForeColor = Color.Black;
+            } else {
+                panel2.ForeColor = Color.White;
+            }
+            panel2.Invalidate();
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e) {
+            Graphics g = e.Graphics;
+            Brush temp = new SolidBrush(panel2.ForeColor);
+            int size = Math.Min(panel2.Width, panel2.Height);
+            g.FillEllipse(temp, 20, 20, size-40, size-40);
         }
     }
 }
