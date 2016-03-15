@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ReversiAI {
-    class IReversiAI {
+    interface IReversiAI {
+        byte getNextMove(GameState state);
     }
 }
