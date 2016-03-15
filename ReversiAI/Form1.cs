@@ -40,38 +40,28 @@ namespace ReversiAI {
             workerThread = new Thread(worker.ThreadRun);
             workerThread.Start();
         }
+        
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing) {
+            if (disposing) {
+                workerThread.Abort();
+                workerThread.Join();
+                if (components != null) {
+                    components.Dispose();
+                }
+            }
+            base.Dispose(disposing);
+        }
 
         private void Form1_nextTurn(object sender, EventArgs e) {
             humanTurn = false;
-            /*
-            byte choice = 255;
-            */
-            if (state.nextTurn == 1) {
-                //player 1's turn (black)
-                if ((Player)combo_p1.SelectedIndex == Player.Human) {
+            if (state.nextTurn == 1 && (Player)combo_p1.SelectedIndex == Player.Human ||
+                state.nextTurn == 2 && (Player)combo_p2.SelectedIndex == Player.Human) {
                     humanTurn = true;
-                }
-                /*
-                if (player1 != null) {
-                    choice = player1.getNextMove(state);
-                }
-                */
-            } else {
-                //player 2's turn (white)
-                if ((Player)combo_p2.SelectedIndex == Player.Human) {
-                    humanTurn = true;
-                }
-                /*
-                if (player2 != null) {
-                    choice = player2.getNextMove(state);
-                }
-                */
             }
-            /*
-            if (choice != 255) {
-                takeTurn(choice & 7, choice >> 3);
-            }
-            */
             lock(worker) {
                 Monitor.Pulse(worker);
             }
