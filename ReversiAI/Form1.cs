@@ -14,15 +14,20 @@ namespace ReversiAI {
     public partial class Form1 : Form {
         public enum Player { Human, Random, Max }
         public string[] players = new string[] { "Human", "AI Random", "AI Maximize" };
-        GameState state;
+        public IReversiAI player1, player2;
+        public GameState state;
         public event EventHandler nextTurn;
         private bool humanTurn;
+        private AIRunner worker;
+        private Thread workerThread;
+
+        public delegate void InvokeDelegate(int x, int y);
 
         public Form1() {
             InitializeComponent();
             state = GameState.createInitialSetup();
             panel_Game.updateBoard(state);
-            panel_Game.eClicked += gameClick;
+            panel_Game.eClicked += eGameClick;
             lbl_Overlay.BackColor = Color.FromArgb(192, 160, 192, 160);
             updateUI();
             nextTurn += Form1_nextTurn;
@@ -30,77 +35,46 @@ namespace ReversiAI {
             combo_p2.Items.AddRange(players);
             combo_p1.SelectedIndex = 0;
             combo_p2.SelectedIndex = 1;
+
+            worker = new AIRunner(this);
+            workerThread = new Thread(worker.ThreadRun);
+            workerThread.Start();
         }
 
         private void Form1_nextTurn(object sender, EventArgs e) {
             humanTurn = false;
+            /*
             byte choice = 255;
+            */
             if (state.nextTurn == 1) {
                 //player 1's turn (black)
-                switch ((Player)combo_p1.SelectedIndex) {
-                    case Player.Human:
-                        humanTurn = true;
-                        break;
-                    case Player.Random:
-                        choice = AIRandom(state);
-                        break;
-                    case Player.Max:
-                        choice = AIMax(state);
-                        break;
+                if ((Player)combo_p1.SelectedIndex == Player.Human) {
+                    humanTurn = true;
                 }
+                /*
+                if (player1 != null) {
+                    choice = player1.getNextMove(state);
+                }
+                */
             } else {
                 //player 2's turn (white)
-                switch ((Player)combo_p2.SelectedIndex) {
-                    case Player.Human:
-                        humanTurn = true;
-                        break;
-                    case Player.Random:
-                        choice = AIRandom(state);
-                        break;
-                    case Player.Max:
-                        choice = AIMax(state);
-                        break;
+                if ((Player)combo_p2.SelectedIndex == Player.Human) {
+                    humanTurn = true;
                 }
+                /*
+                if (player2 != null) {
+                    choice = player2.getNextMove(state);
+                }
+                */
             }
+            /*
             if (choice != 255) {
                 takeTurn(choice & 7, choice >> 3);
             }
-        }
-
-        private byte AIRandom(GameState s) {
-            byte[] moves = GameState.getValidMoves(s, s.nextTurn);
-            Random rng = new Random();
-            int options;
-            options = moves.Count((b) => { return b > 0; });
-            for (byte i = 0; i < 64; i++) {
-                if (moves[i] > 0) {
-                    if (rng.Next(options) == 0) {
-                        return i;
-                    } else {
-                        options--;
-                    }
-                }
+            */
+            lock(worker) {
+                Monitor.Pulse(worker);
             }
-            return 255;
-        }
-
-        private byte AIMax(GameState s) {
-            byte[] moves = GameState.getValidMoves(s, s.nextTurn);
-            byte best = 255;
-            int tempCount, bestTurns = 0;
-            GameState temp;
-            for (byte i = 0; i < 64; i++) {
-                if (moves[i] > 0) {
-                    temp = GameState.getTransformedBoard(s, moves[i] & 7, moves[i] >> 3);
-                    tempCount = temp.squares.Count((b) => { return b == s.nextTurn; });
-                    if (tempCount > bestTurns) {
-                        best = i;
-                        bestTurns = tempCount;
-                    }
-                }
-            }
-
-            return best;
         }
 
         private void takeTurn(int x, int y) {
@@ -124,7 +98,11 @@ namespace ReversiAI {
             endTurn();
         }
 
-        private void gameClick(object sender, GamePanel.BoardClick e) {
+        public void turnTaken(byte index) {
+            BeginInvoke(new InvokeDelegate(takeTurn), index & 7, index >> 3);
+        }
+
+        private void eGameClick(object sender, GamePanel.BoardClick e) {
             if (!humanTurn) return;
             takeTurn(e.x, e.y);
         }
@@ -215,6 +193,30 @@ namespace ReversiAI {
 
         private void lbl_Overlay_Click(object sender, EventArgs e) {
             if (lbl_Overlay.Text.Equals("Start Game")) {
+                combo_p1.Enabled = false;
+                combo_p2.Enabled = false;
+                switch ((Player)combo_p1.SelectedIndex) {
+                    case Player.Human:
+                        player1 = null;
+                        break;
+                    case Player.Random:
+                        player1 = new AIRandom();
+                        break;
+                    case Player.Max:
+                        player1 = new AIMaximize();
+                        break;
+                }
+                switch ((Player)combo_p2.SelectedIndex) {
+                    case Player.Human:
+                        player2 = null;
+                        break;
+                    case Player.Random:
+                        player2 = new AIRandom();
+                        break;
+                    case Player.Max:
+                        player2 = new AIMaximize();
+                        break;
+                }
                 lbl_Overlay.Visible = false;
                 //Trigger turn change
                 EventHandler temp = nextTurn;
@@ -235,9 +237,46 @@ namespace ReversiAI {
         private void lbl_Restart_Click(object sender, EventArgs e) {
             lbl_Overlay.Text = "Start Game";
             lbl_Overlay.Visible = true;
+            combo_p1.Enabled = true;
+            combo_p2.Enabled = true;
             state = GameState.createInitialSetup();
             panel_Game.updateBoard(state);
             updateUI();
+        }
+
+        internal IReversiAI getPlayer() {
+            if (state.nextTurn == 1) {
+                return player1;
+            } else {
+                return player2;
+            }
+        }
+
+        internal GameState getState() {
+            return state;
+        }
+    }
+
+    public class AIRunner {
+        Form1 parent;
+
+        public AIRunner(Form1 owner) {
+            parent = owner;
+        }
+        public void ThreadRun() {
+            byte move;
+            while (true) {
+                lock(this) {
+                    Monitor.Wait(this);
+                    IReversiAI engine = parent.getPlayer();
+                    if (engine != null) {
+                        move = engine.getNextMove(parent.getState());
+                        if (move != 255) {
+                            parent.turnTaken(move);
+                        }
+                    }
+                }
+            }
         }
     }
 }
