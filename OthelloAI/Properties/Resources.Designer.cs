@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace OthelloAI.Properties {
+namespace ReversiAI.Properties {
 
 
     /// <summary>

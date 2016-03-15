@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OthelloAI {
+namespace ReversiAI {
     public class GameState {
         /*  The next player to play. 1 is black, 2 is white. */
         public byte nextTurn = 1;
@@ -19,15 +19,26 @@ namespace OthelloAI {
 
         public static byte[] getValidMoves(GameState state, byte player) {
             byte[] results = new byte[64];
-            int i = 0;
-            for(int x = 0; x < 8; x++) {
+            for (int x = 0; x < 8; x++) {
                 for (int y = 0; y < 8; y++) {
                     if (validMove(state, player, x, y)) {
-                        results[i++] = 1;
+                        results[x | y << 3] = 1;
                     }
                 }
             }
             return results;
+        }
+
+        public static bool anyValidMoves(GameState state, byte player) {
+            byte[] results = new byte[64];
+            for (int x = 0; x < 8; x++) {
+                for (int y = 0; y < 8; y++) {
+                    if (validMove(state, player, x, y)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         public static bool validMove(GameState state, byte player, int x, int y) {
@@ -58,6 +69,132 @@ namespace OthelloAI {
                 }
             }
             return false;
+        }
+
+        //Precondition: the given coordinates are a legal move for the current player.
+        public static GameState getTransformedBoard(GameState past, int x, int y) {
+            GameState result = new GameState();
+            Array.Copy(past.squares, result.squares, 64);
+            result.nextTurn = past.nextTurn;
+
+            int index = x | y << 3;
+
+            //update clicked square
+            result.squares[index] = past.nextTurn;
+
+            #region Cascade
+            //cascade changes in all directions
+            //left
+            for (int dx = x - 1; dx >= 0; dx--) {
+                if (result.squares[index - x + dx] == 0) {
+                    break;
+                }
+                if (result.squares[index - x + dx] == result.nextTurn) {
+                    while (++dx < x) {
+                        result.squares[index - x + dx] = result.nextTurn;
+                    }
+                    break;
+                }
+            }
+            //right
+            for (int dx = x + 1; dx < 8; dx++) {
+                if (result.squares[index - x + dx] == 0) {
+                    break;
+                }
+                if (result.squares[index - x + dx] == result.nextTurn) {
+                    while (--dx > x) {
+                        result.squares[index - x + dx] = result.nextTurn;
+                    }
+                    break;
+                }
+            }
+            //up
+            for (int dy = y - 1; dy >= 0; dy--) {
+                if (result.squares[index + (dy - y << 3)] == 0) {
+                    break;
+                }
+                if (result.squares[index + (dy - y << 3)] == result.nextTurn) {
+                    while (++dy < y) {
+                        result.squares[index + (dy - y << 3)] = result.nextTurn;
+                    }
+                    break;
+                }
+            }
+            //down
+            for (int dy = y + 1; dy < 8; dy++) {
+                if (result.squares[index + (dy - y << 3)] == 0) {
+                    break;
+                }
+                if (result.squares[index + (dy - y << 3)] == result.nextTurn) {
+                    while (--dy > y) {
+                        result.squares[index + (dy - y << 3)] = result.nextTurn;
+                    }
+                    break;
+                }
+            }
+
+
+            //upleft
+            for (int dx = x - 1, dy = y - 1; dx >= 0 && dy >= 0; dx--, dy--) {
+                if (result.squares[index + (dy - y << 3) + (dx - x)] == 0) {
+                    break;
+                }
+                if (result.squares[index + (dy - y << 3) + (dx - x)] == result.nextTurn) {
+                    while (++dy < y) {
+                        ++dx;
+                        result.squares[index + (dy - y << 3) + (dx - x)] = result.nextTurn;
+                    }
+                    break;
+                }
+            }
+            //upright
+            for (int dx = x + 1, dy = y - 1; dx < 8 && dy >= 0; dx++, dy--) {
+                if (result.squares[index + (dy - y << 3) + (dx - x)] == 0) {
+                    break;
+                }
+                if (result.squares[index + (dy - y << 3) + (dx - x)] == result.nextTurn) {
+                    while (++dy < y) {
+                        --dx;
+                        result.squares[index + (dy - y << 3) + (dx - x)] = result.nextTurn;
+                    }
+                    break;
+                }
+            }
+            //downright
+            for (int dx = x + 1, dy = y + 1; dx < 8 && dy < 8; dx++, dy++) {
+                if (result.squares[index + (dy - y << 3) + (dx - x)] == 0) {
+                    break;
+                }
+                if (result.squares[index + (dy - y << 3) + (dx - x)] == result.nextTurn) {
+                    while (--dy > y) {
+                        --dx;
+                        result.squares[index + (dy - y << 3) + (dx - x)] = result.nextTurn;
+                    }
+                    break;
+                }
+            }
+            //downleft
+            for (int dx = x - 1, dy = y + 1; dx >= 0 && dy < 8; dx--, dy++) {
+                if (result.squares[index + (dy - y << 3) + (dx - x)] == 0) {
+                    break;
+                }
+                if (result.squares[index + (dy - y << 3) + (dx - x)] == result.nextTurn) {
+                    while (--dy > y) {
+                        ++dx;
+                        result.squares[index + (dy - y << 3) + (dx - x)] = result.nextTurn;
+                    }
+                    break;
+                }
+            }
+            #endregion Cascade
+
+            //switch players
+            //check if the next player can actually go
+            if (GameState.anyValidMoves(result, (byte)(result.nextTurn ^ 3))) {
+                result.nextTurn = (byte)(result.nextTurn ^ 3);
+            }
+
+            return result;
         }
     }
 }

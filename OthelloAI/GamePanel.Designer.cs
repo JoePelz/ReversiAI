@@ -1,4 +1,4 @@
-﻿namespace OthelloAI {
+﻿namespace ReversiAI {
     partial class GamePanel {
         /// <summary>
         /// Required designer variable.

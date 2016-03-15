@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace OthelloAI {
+namespace ReversiAI {
     public partial class GamePanel : Panel {
         Rectangle boardRect;
         Point[] locations;
