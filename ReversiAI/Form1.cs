@@ -12,71 +12,29 @@ using System.Windows.Forms;
 namespace ReversiAI {
 
     public partial class Form1 : Form {
-        public enum Player { Human, Random, Max }
-        public string[] players = new string[] { "Human", "AI Random", "AI Maximize" };
-        public IReversiAI player1, player2;
-        public GameState state;
-        public event EventHandler nextTurn;
-        private bool humanTurn;
-        private AIRunner worker;
-        private Thread workerThread;
-
-        public delegate void InvokeDelegate(int x, int y);
+        private Controller controller;
+        public delegate void GameState_InvokeDelegate(GameState state);
 
         public Form1() {
             InitializeComponent();
-            state = GameState.createInitialSetup();
-            panel_Game.updateBoard(state);
             panel_Game.eClicked += eGameClick;
             lbl_Overlay.BackColor = Color.FromArgb(192, 160, 192, 160);
-            updateUI();
-            nextTurn += Form1_nextTurn;
-            combo_p1.Items.AddRange(players);
-            combo_p2.Items.AddRange(players);
+            updateUI(GameState.createInitialSetup());
+            combo_p1.Items.AddRange(Controller.players);
+            combo_p2.Items.AddRange(Controller.players);
             combo_p1.SelectedIndex = 0;
-            combo_p2.SelectedIndex = 1;
-
-            worker = new AIRunner(this);
-            workerThread = new Thread(worker.ThreadRun);
-            workerThread.Start();
-        }
-        
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing) {
-            if (disposing) {
-                workerThread.Abort();
-                workerThread.Join();
-                if (components != null) {
-                    components.Dispose();
-                }
-            }
-            base.Dispose(disposing);
+            combo_p2.SelectedIndex = 0;
+            controller = new Controller(this);
         }
 
-        private void Form1_nextTurn(object sender, EventArgs e) {
-            humanTurn = false;
-            if (state.nextTurn == 1 && (Player)combo_p1.SelectedIndex == Player.Human ||
-                state.nextTurn == 2 && (Player)combo_p2.SelectedIndex == Player.Human) {
-                    humanTurn = true;
+        private delegate void setWinnerHandler(int winner);
+        public void setWinner(int winner) {
+            if (InvokeRequired) {
+                setWinnerHandler h = new setWinnerHandler(setWinner);
+                Invoke(h, winner);
+                return;
             }
-            lock(worker) {
-                Monitor.Pulse(worker);
-            }
-        }
 
-        private void takeTurn(int x, int y) {
-            if (!GameState.validMove(state, state.nextTurn, x, y)) return;
-            
-            state = GameState.getTransformedBoard(state, x, y);
-
-            panel_Game.updateBoard(state);
-            updateUI();
-
-            //Check for game over
-            int winner = getWinner(state);
             if (winner == 3) {
                 lbl_Overlay.Text = "Tie Game!";
                 lbl_Overlay.Visible = true;
@@ -84,38 +42,19 @@ namespace ReversiAI {
                 lbl_Overlay.Text = "Player " + winner + "\nWINS!";
                 lbl_Overlay.Visible = true;
             }
-            //Trigger turn change
-            endTurn();
-        }
-
-        public void turnTaken(byte index) {
-            BeginInvoke(new InvokeDelegate(takeTurn), index & 7, index >> 3);
         }
 
         private void eGameClick(object sender, GamePanel.BoardClick e) {
-            if (!humanTurn) return;
-            takeTurn(e.x, e.y);
-        }
-
-        private void endTurn() {
-            EventHandler temp = nextTurn;
-            if (temp != null) {
-                temp(this, EventArgs.Empty);
+            if (controller.HumanTurn) {
+                controller.applyMove(e.x, e.y);
             }
         }
 
-        private int getWinner(GameState state) {
-            byte[] moves = GameState.getValidMoves(state, (byte)(state.nextTurn));
-            if (moves.Any((v) => { return v != 0; })) {
-                return 0;
+        public Controller.Player getPlayerSelection(int player) {
+            if (player == 1) {
+                return (Controller.Player)combo_p1.SelectedIndex;
             }
-            int black_counter = 0, white_counter = 0;
-            for (int i = 0; i < 64; i++) {
-                if (state.squares[i] == 1) black_counter++;
-                else if (state.squares[i] == 2) white_counter++;
-            }
-            if (black_counter == white_counter) return 3;
-            return black_counter > white_counter ? 1 : 2;
+            return (Controller.Player)combo_p2.SelectedIndex;
         }
 
         private void panel_nextPlayer_Paint(object sender, PaintEventArgs e) {
@@ -126,7 +65,17 @@ namespace ReversiAI {
             g.FillEllipse(temp, panel_nextPlayer.Width / 2 - size / 2, panel_nextPlayer.Height / 2 - size / 2, size, size);
         }
 
-        private void updateUI() {
+        private delegate void updateUIHandler(GameState state);
+        public void updateUI(GameState state) {
+            if (InvokeRequired) {
+                updateUIHandler h = new updateUIHandler(updateUI);
+                Invoke(h, state);
+                return;
+            }
+
+
+            panel_Game.updateBoard(state);
+
             if (state.nextTurn == 1) {
                 panel_nextPlayer.ForeColor = Color.Black;
             } else {
@@ -183,36 +132,8 @@ namespace ReversiAI {
 
         private void lbl_Overlay_Click(object sender, EventArgs e) {
             if (lbl_Overlay.Text.Equals("Start Game")) {
-                combo_p1.Enabled = false;
-                combo_p2.Enabled = false;
-                switch ((Player)combo_p1.SelectedIndex) {
-                    case Player.Human:
-                        player1 = null;
-                        break;
-                    case Player.Random:
-                        player1 = new AIRandom();
-                        break;
-                    case Player.Max:
-                        player1 = new AIMaximize();
-                        break;
-                }
-                switch ((Player)combo_p2.SelectedIndex) {
-                    case Player.Human:
-                        player2 = null;
-                        break;
-                    case Player.Random:
-                        player2 = new AIRandom();
-                        break;
-                    case Player.Max:
-                        player2 = new AIMaximize();
-                        break;
-                }
+                controller.startGame();
                 lbl_Overlay.Visible = false;
-                //Trigger turn change
-                EventHandler temp = nextTurn;
-                if (temp != null) {
-                    temp(this, EventArgs.Empty);
-                }
             }
         }
 
@@ -229,44 +150,8 @@ namespace ReversiAI {
             lbl_Overlay.Visible = true;
             combo_p1.Enabled = true;
             combo_p2.Enabled = true;
-            state = GameState.createInitialSetup();
-            panel_Game.updateBoard(state);
-            updateUI();
+            controller.resetGame();
         }
 
-        internal IReversiAI getPlayer() {
-            if (state.nextTurn == 1) {
-                return player1;
-            } else {
-                return player2;
-            }
-        }
-
-        internal GameState getState() {
-            return state;
-        }
-    }
-
-    public class AIRunner {
-        Form1 parent;
-
-        public AIRunner(Form1 owner) {
-            parent = owner;
-        }
-        public void ThreadRun() {
-            byte move;
-            while (true) {
-                lock(this) {
-                    Monitor.Wait(this);
-                    IReversiAI engine = parent.getPlayer();
-                    if (engine != null) {
-                        move = engine.getNextMove(parent.getState());
-                        if (move != 255) {
-                            parent.turnTaken(move);
-                        }
-                    }
-                }
-            }
-        }
     }
 }
