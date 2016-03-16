@@ -7,18 +7,20 @@ using System.Threading.Tasks;
 
 namespace ReversiAI {
     public class Controller {
-        public enum Player { Human, Random, Max }
-        public static string[] players = new string[] { "Human", "AI Random", "AI Maximize" };
+        public enum Player { Human, Random, Max, Min, First, Tree3 }
+        public static string[] players = new string[] { "Human", "AI Random", "AI Maximize", "AI Minimize", "AI First", "3 level tree" };
         public bool HumanTurn { get { return humanTurn; } }
 
-        private IReversiAI player1, player2;
+        private IReversiAI[] player;
         private GameState state;
         private Form1 gui;
         private bool humanTurn;
+        private int[] batchResults;
 
         public Controller(Form1 owner) {
             state = GameState.createInitialSetup();
             gui = owner;
+            player = new IReversiAI[2];
         }
 
         /// <summary>
@@ -26,24 +28,17 @@ namespace ReversiAI {
         /// and begins the first turn.
         /// </summary>
         public void startGame() {
-            player1 = null;
-            player2 = null;
-            switch (gui.getPlayerSelection(1)) {
-                case Player.Max:
-                    player1 = new AIMaximize();
-                    break;
-                case Player.Random:
-                    player1 = new AIRandom();
-                    break;
+            for(int i = 0; i < player.Length; i++) {
+                switch (gui.getPlayerSelection(i + 1)) {
+                    case Player.Max: player[i] = new AIMaximize(); break;
+                    case Player.Min: player[i] = new AIMinimize(); break;
+                    case Player.Random: player[i] = new AIRandom(); break;
+                    case Player.First: player[i] = new AIFirst(); break;
+                    case Player.Tree3: player[i] = new AITree3(); break;
+                    default: player[i] = null; break;
+                }
             }
-            switch (gui.getPlayerSelection(2)) {
-                case Player.Max:
-                    player2 = new AIMaximize();
-                    break;
-                case Player.Random:
-                    player2 = new AIRandom();
-                    break;
-            }
+
             beginTurn();
         }
 
@@ -127,11 +122,72 @@ namespace ReversiAI {
             }
         }
 
+        public static int applyMoveBatch(ref GameState state, int x, int y) {
+            state = GameState.getTransformedBoard(state, x, y);
+            return getWinner(state);
+        }
+
+        public static int playGame(Player p1, Player p2) {
+            int winner = 0;
+            IReversiAI ai1;
+            IReversiAI ai2;
+            switch (p1) {
+                case Player.Max: ai1 = new AIMaximize(); break;
+                case Player.Min: ai1 = new AIMinimize(); break;
+                case Player.Random: ai1 = new AIRandom(); break;
+                case Player.First: ai1 = new AIFirst(); break;
+                case Player.Tree3: ai1 = new AITree3(); break;
+                default: ai1 = null; break;
+            }
+            switch (p2) {
+                case Player.Max: ai2 = new AIMaximize(); break;
+                case Player.Min: ai2 = new AIMinimize(); break;
+                case Player.Random: ai2 = new AIRandom(); break;
+                case Player.First: ai2 = new AIFirst(); break;
+                case Player.Tree3: ai2 = new AITree3(); break;
+                default: ai2 = null; break;
+            }
+            if (ai1 == null || ai2 == null) {
+                return winner;
+            }
+
+            byte move;
+            GameState state = GameState.createInitialSetup();
+            while(winner == 0) {
+                if (state.nextTurn == 1)
+                    move = ai1.getNextMove(state);
+                else
+                    move = ai2.getNextMove(state);
+                winner = applyMoveBatch(ref state, move & 7, move >> 3);
+            }
+            return winner;
+        }
+
+        public void doBatch(int numGames) {
+            batchResults = new int[4];
+            Array.Clear(batchResults, 0, 4);
+            Task[] gamesToPlay = new Task[numGames];
+            Player p1 = gui.getPlayerSelection(1);
+            Player p2 = gui.getPlayerSelection(2);
+            for (int i = 0; i < numGames; i++) {
+                gamesToPlay[i] = Task.Factory.StartNew(() => { updateBatchResults(playGame(p1, p2)); });
+            }
+            Task.WaitAll(gamesToPlay);
+            gui.batchComplete(batchResults);
+        }
+
+        public void updateBatchResults(int result) {
+            lock(this) {
+                batchResults[result]++;
+            }
+        }
+
         /// <summary>
         /// Determine if a game is over and if so, who the winner is.
         /// </summary>
         /// <param name="state">The game board to check for a winner</param>
-        /// <returns>0 if no winner, 1 if player 1, 2 if player 2, 3 if tie game.</returns>
+        /// <returns>return 0 if no winner, return 1 if player 1 won, 
+        /// return 2 if player 2 won, return 3 if tie game.</returns>
         public static int getWinner(GameState state) {
             byte[] moves = GameState.getValidMoves(state, (byte)(state.nextTurn));
             if (moves.Any((v) => { return v != 0; })) {
@@ -152,12 +208,7 @@ namespace ReversiAI {
         /// </summary>
         /// <returns>The AI for the current player, or null if it is a human's turn.</returns>
         private IReversiAI getPlayer() {
-            if (state.nextTurn == 1) {
-                return player1;
-            } else {
-                return player2;
-            }
+            return player[state.nextTurn - 1];
         }
-
     }
 }

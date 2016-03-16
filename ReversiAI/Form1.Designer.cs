@@ -30,7 +30,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panel_Game = new ReversiAI.GamePanel(this.components);
             this.lbl_Overlay = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayout_ControlsMaster = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.lblCurrentPlayer = new System.Windows.Forms.Label();
             this.panel_nextPlayer = new System.Windows.Forms.Panel();
@@ -45,15 +45,20 @@
             this.combo_p2 = new System.Windows.Forms.ComboBox();
             this.lbl_P1 = new System.Windows.Forms.Label();
             this.lbl_P2 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.num_batch = new System.Windows.Forms.NumericUpDown();
+            this.lbl_Batch = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.panel_Game.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.tableLayout_ControlsMaster.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_batch)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -68,7 +73,7 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel1);
+            this.splitContainer1.Panel2.Controls.Add(this.tableLayout_ControlsMaster);
             this.splitContainer1.Size = new System.Drawing.Size(759, 405);
             this.splitContainer1.SplitterDistance = 457;
             this.splitContainer1.TabIndex = 0;
@@ -97,25 +102,27 @@
             this.lbl_Overlay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbl_Overlay.Click += new System.EventHandler(this.lbl_Overlay_Click);
             // 
-            // tableLayoutPanel1
+            // tableLayout_ControlsMaster
             // 
-            this.tableLayoutPanel1.BackColor = System.Drawing.Color.DarkOliveGreen;
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.lbl_Restart, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel4, 0, 3);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 51F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(298, 405);
-            this.tableLayoutPanel1.TabIndex = 0;
+            this.tableLayout_ControlsMaster.BackColor = System.Drawing.Color.DarkOliveGreen;
+            this.tableLayout_ControlsMaster.ColumnCount = 1;
+            this.tableLayout_ControlsMaster.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayout_ControlsMaster.Controls.Add(this.tableLayoutPanel2, 0, 0);
+            this.tableLayout_ControlsMaster.Controls.Add(this.tableLayoutPanel3, 0, 1);
+            this.tableLayout_ControlsMaster.Controls.Add(this.lbl_Restart, 0, 2);
+            this.tableLayout_ControlsMaster.Controls.Add(this.tableLayoutPanel4, 0, 3);
+            this.tableLayout_ControlsMaster.Controls.Add(this.tableLayoutPanel1, 0, 4);
+            this.tableLayout_ControlsMaster.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayout_ControlsMaster.Location = new System.Drawing.Point(0, 0);
+            this.tableLayout_ControlsMaster.Name = "tableLayout_ControlsMaster";
+            this.tableLayout_ControlsMaster.RowCount = 5;
+            this.tableLayout_ControlsMaster.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayout_ControlsMaster.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12F));
+            this.tableLayout_ControlsMaster.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12F));
+            this.tableLayout_ControlsMaster.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 39F));
+            this.tableLayout_ControlsMaster.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12F));
+            this.tableLayout_ControlsMaster.Size = new System.Drawing.Size(298, 405);
+            this.tableLayout_ControlsMaster.TabIndex = 0;
             // 
             // tableLayoutPanel2
             // 
@@ -256,7 +263,7 @@
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(292, 202);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(292, 151);
             this.tableLayoutPanel4.TabIndex = 4;
             // 
             // combo_p1
@@ -269,7 +276,7 @@
             this.combo_p1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.combo_p1.Font = new System.Drawing.Font("Tahoma", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.combo_p1.FormattingEnabled = true;
-            this.combo_p1.Location = new System.Drawing.Point(3, 43);
+            this.combo_p1.Location = new System.Drawing.Point(3, 33);
             this.combo_p1.Name = "combo_p1";
             this.combo_p1.Size = new System.Drawing.Size(140, 31);
             this.combo_p1.TabIndex = 8;
@@ -284,7 +291,7 @@
             this.combo_p2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.combo_p2.Font = new System.Drawing.Font("Tahoma", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.combo_p2.FormattingEnabled = true;
-            this.combo_p2.Location = new System.Drawing.Point(149, 43);
+            this.combo_p2.Location = new System.Drawing.Point(149, 33);
             this.combo_p2.Name = "combo_p2";
             this.combo_p2.Size = new System.Drawing.Size(140, 31);
             this.combo_p2.TabIndex = 7;
@@ -294,7 +301,7 @@
             this.lbl_P1.AutoSize = true;
             this.lbl_P1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.lbl_P1.Font = new System.Drawing.Font("Script MT Bold", 15F);
-            this.lbl_P1.Location = new System.Drawing.Point(3, 16);
+            this.lbl_P1.Location = new System.Drawing.Point(3, 6);
             this.lbl_P1.Name = "lbl_P1";
             this.lbl_P1.Size = new System.Drawing.Size(140, 24);
             this.lbl_P1.TabIndex = 9;
@@ -306,12 +313,63 @@
             this.lbl_P2.AutoSize = true;
             this.lbl_P2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.lbl_P2.Font = new System.Drawing.Font("Script MT Bold", 15F);
-            this.lbl_P2.Location = new System.Drawing.Point(149, 16);
+            this.lbl_P2.Location = new System.Drawing.Point(149, 6);
             this.lbl_P2.Name = "lbl_P2";
             this.lbl_P2.Size = new System.Drawing.Size(140, 24);
             this.lbl_P2.TabIndex = 10;
             this.lbl_P2.Text = "Player 2";
             this.lbl_P2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 44.44444F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55.55556F));
+            this.tableLayoutPanel1.Controls.Add(this.num_batch, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.lbl_Batch, 1, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 357);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(292, 45);
+            this.tableLayoutPanel1.TabIndex = 5;
+            // 
+            // num_batch
+            // 
+            this.num_batch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.num_batch.Font = new System.Drawing.Font("Tahoma", 14F);
+            this.num_batch.Location = new System.Drawing.Point(3, 3);
+            this.num_batch.Maximum = new decimal(new int[] {
+            15000,
+            0,
+            0,
+            0});
+            this.num_batch.Name = "num_batch";
+            this.num_batch.Size = new System.Drawing.Size(123, 30);
+            this.num_batch.TabIndex = 0;
+            this.num_batch.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.num_batch.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // lbl_Batch
+            // 
+            this.lbl_Batch.AutoSize = true;
+            this.lbl_Batch.BackColor = System.Drawing.Color.Olive;
+            this.lbl_Batch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbl_Batch.Font = new System.Drawing.Font("Script MT Bold", 15F);
+            this.lbl_Batch.Location = new System.Drawing.Point(132, 0);
+            this.lbl_Batch.Name = "lbl_Batch";
+            this.lbl_Batch.Size = new System.Drawing.Size(157, 45);
+            this.lbl_Batch.TabIndex = 1;
+            this.lbl_Batch.Text = "Batch";
+            this.lbl_Batch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbl_Batch.Click += new System.EventHandler(this.lbl_Batch_Click);
+            this.lbl_Batch.MouseEnter += new System.EventHandler(this.lbl_Restart_MouseEnter);
+            this.lbl_Batch.MouseLeave += new System.EventHandler(this.lbl_Restart_MouseLeave);
             // 
             // Form1
             // 
@@ -329,14 +387,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.panel_Game.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            this.tableLayout_ControlsMaster.ResumeLayout(false);
+            this.tableLayout_ControlsMaster.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_batch)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -345,7 +406,7 @@
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private GamePanel panel_Game;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableLayout_ControlsMaster;
         private System.Windows.Forms.Label lblCurrentPlayer;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Panel panel_nextPlayer;
@@ -361,6 +422,9 @@
         private System.Windows.Forms.ComboBox combo_p2;
         private System.Windows.Forms.Label lbl_P1;
         private System.Windows.Forms.Label lbl_P2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.NumericUpDown num_batch;
+        private System.Windows.Forms.Label lbl_Batch;
     }
 }
 

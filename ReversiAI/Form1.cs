@@ -120,6 +120,10 @@ namespace ReversiAI {
             combo_p2.Font = new Font(combo_p2.Font.Name, size * 2 / 6,
                 combo_p2.Font.Style, combo_p2.Font.Unit);
 
+            lbl_Batch.Font = new Font(lbl_Batch.Font.Name, size * 3 / 5,
+                lbl_Batch.Font.Style, lbl_Batch.Font.Unit);
+            num_batch.Font = new Font(num_batch.Font.Name, size * 3 / 6,
+                num_batch.Font.Style, num_batch.Font.Unit);
 
             lbl_Restart.Font = new Font(lbl_Restart.Font.Name, size / 2,
                 lbl_Restart.Font.Style, lbl_Restart.Font.Unit);
@@ -134,15 +138,25 @@ namespace ReversiAI {
             if (lbl_Overlay.Text.Equals("Start Game")) {
                 controller.startGame();
                 lbl_Overlay.Visible = false;
+                combo_p1.Enabled = false;
+                combo_p2.Enabled = false;
             }
         }
 
+        internal void batchComplete(int[] batchResults) {
+            MessageBox.Show("Batch Results:"
+                + "\nError cases: " + batchResults[0]
+                + "\nPlayer 1 wins: " + batchResults[1]
+                + "\nPlayer 2 wins: " + batchResults[2]
+                + "\nTie games: " + batchResults[3], "Batch Complete!");
+        }
+
         private void lbl_Restart_MouseEnter(object sender, EventArgs e) {
-            lbl_Restart.BackColor = Color.OliveDrab;
+            (sender as Label).BackColor = Color.OliveDrab;
         }
 
         private void lbl_Restart_MouseLeave(object sender, EventArgs e) {
-            lbl_Restart.BackColor = Color.Olive;
+            (sender as Label).BackColor = Color.Olive;
         }
 
         private void lbl_Restart_Click(object sender, EventArgs e) {
@@ -153,5 +167,9 @@ namespace ReversiAI {
             controller.resetGame();
         }
 
+        private void lbl_Batch_Click(object sender, EventArgs e) {
+            int numGames = (int)num_batch.Value;
+            controller.doBatch(numGames);
+        }
     }
 }
