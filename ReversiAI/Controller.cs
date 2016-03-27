@@ -7,20 +7,41 @@ using System.Threading.Tasks;
 
 namespace ReversiAI {
     public class Controller {
-        public enum Player { Human, Random, Max, Min, First, Tree3 }
-        public static string[] players = new string[] { "Human", "AI Random", "AI Maximize", "AI Minimize", "AI First", "3 level tree" };
-        public bool HumanTurn { get { return humanTurn; } }
+        public enum Player { Human, Random, Max, Min, First, Tree2, Tree3, Tree4, Tree5, Tree6, Tree7 }
+        public static string[] players = new string[] {
+            "Human", "AI Random", "AI Maximize", "AI Minimize", "AI First",
+            "2-Depth Tree", "3-Depth Tree", "4-Depth Tree",
+            "5-Depth Tree", "6-Depth Tree", "7-Depth Tree" };
+        public static IReversiAI getAI(Player sel) {
+            switch (sel) {
+                case Player.Max: return new AIMaximize();
+                case Player.Min: return new AIMinimize();
+                case Player.Random: return new AIRandom();
+                case Player.First: return new AIFirst();
+                case Player.Tree2: return new AITreeAll(2);
+                case Player.Tree3: return new AITreeAll(3);
+                case Player.Tree4: return new AITreeAll(4);
+                case Player.Tree5: return new AITreeAll(5);
+                case Player.Tree6: return new AITreeAll(6);
+                case Player.Tree7: return new AITreeAll(7);
+                default: return null;
+            }
+        }
 
-        private IReversiAI[] player;
+
+        private IReversiAI player1, player2;
         private GameState state;
         private Form1 gui;
         private bool humanTurn;
         private int[] batchResults;
+        public bool HumanTurn { get { return humanTurn; } }
 
         public Controller(Form1 owner) {
             state = GameState.createInitialSetup();
             gui = owner;
-            player = new IReversiAI[2];
+
+            //TimeProfiler tp = new TimeProfiler();
+            //tp.runTests();
         }
 
         /// <summary>
@@ -28,17 +49,8 @@ namespace ReversiAI {
         /// and begins the first turn.
         /// </summary>
         public void startGame() {
-            for(int i = 0; i < player.Length; i++) {
-                switch (gui.getPlayerSelection(i + 1)) {
-                    case Player.Max: player[i] = new AIMaximize(); break;
-                    case Player.Min: player[i] = new AIMinimize(); break;
-                    case Player.Random: player[i] = new AIRandom(); break;
-                    case Player.First: player[i] = new AIFirst(); break;
-                    case Player.Tree3: player[i] = new AITree3(); break;
-                    default: player[i] = null; break;
-                }
-            }
-
+            player1 = getAI(gui.getPlayerSelection(1));
+            player2 = getAI(gui.getPlayerSelection(2));
             beginTurn();
         }
 
@@ -129,24 +141,8 @@ namespace ReversiAI {
 
         public static int playGame(Player p1, Player p2) {
             int winner = 0;
-            IReversiAI ai1;
-            IReversiAI ai2;
-            switch (p1) {
-                case Player.Max: ai1 = new AIMaximize(); break;
-                case Player.Min: ai1 = new AIMinimize(); break;
-                case Player.Random: ai1 = new AIRandom(); break;
-                case Player.First: ai1 = new AIFirst(); break;
-                case Player.Tree3: ai1 = new AITree3(); break;
-                default: ai1 = null; break;
-            }
-            switch (p2) {
-                case Player.Max: ai2 = new AIMaximize(); break;
-                case Player.Min: ai2 = new AIMinimize(); break;
-                case Player.Random: ai2 = new AIRandom(); break;
-                case Player.First: ai2 = new AIFirst(); break;
-                case Player.Tree3: ai2 = new AITree3(); break;
-                default: ai2 = null; break;
-            }
+            IReversiAI ai1 = getAI(p1);
+            IReversiAI ai2 = getAI(p2);
             if (ai1 == null || ai2 == null) {
                 return winner;
             }
@@ -208,7 +204,7 @@ namespace ReversiAI {
         /// </summary>
         /// <returns>The AI for the current player, or null if it is a human's turn.</returns>
         private IReversiAI getPlayer() {
-            return player[state.nextTurn - 1];
+            return state.nextTurn == 1 ? player1 : player2;
         }
     }
 }

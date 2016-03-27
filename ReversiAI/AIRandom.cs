@@ -6,8 +6,14 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace ReversiAI {
+    //Random Number Generator Generator
+    public class RNGG {
+        private static int i = 1;
+        public static Random getRNG() { return new Random(i++); }
+    }
+
     public class AIRandom : IReversiAI {
-        private static Random rng = new Random();
+        private Random rng = RNGG.getRNG();
         public byte getNextMove(GameState state) {
             var moves = GameState.getValidMoves(state, state.nextTurn);
             int options;

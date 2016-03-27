@@ -19,11 +19,9 @@ namespace ReversiAI {
 
         public static byte[] getValidMoves(GameState state, byte player) {
             byte[] results = new byte[64];
-            for (int x = 0; x < 8; x++) {
-                for (int y = 0; y < 8; y++) {
-                    if (validMove(state, player, x, y)) {
-                        results[x | y << 3] = 1;
-                    }
+            for (int i = 0; i < 64; i++) {
+                if (validMove(state, player, i & 7, i >> 3)) {
+                    results[i] = 1;
                 }
             }
             return results;
@@ -71,6 +69,43 @@ namespace ReversiAI {
             return false;
         }
 
+        public static bool isStable(GameState state, int x, int y) {
+            if (state.squares[x | y << 3] == 0) {
+                return false;
+            }
+            byte friend = state.squares[x | y << 3];
+
+
+            //horizontal
+            int lost = 0;
+            for (int tx = x - 1; tx >= 0; tx--) if (state.squares[tx | y << 3] != friend) { lost++; break; }
+            if (lost == 1) {
+                for (int tx = x + 1; tx <= 7; tx++) if (state.squares[tx | y << 3] != friend) return false;
+            }
+
+            //vertical
+            lost = 0;
+            for (int ty = y - 1; ty >= 0; ty--) if (state.squares[x | ty << 3] != friend) { lost++; break; }
+            if (lost == 1) {
+                for (int ty = y + 1; ty <= 7; ty++) if (state.squares[x | ty << 3] != friend) return false;
+            }
+
+            //diagonal 1
+            lost = 0;
+            for (int ty = y - 1, tx = x - 1; ty >= 0 && tx >= 0; ty--, tx--) if (state.squares[tx | ty << 3] != friend) { lost++; break; }
+            if (lost == 1) {
+                for (int ty = y + 1, tx = x + 1; ty <= 7 && tx <= 7; ty++, tx++) if (state.squares[tx | ty << 3] != friend) return false;
+            }
+            //diagonal 1
+            lost = 0;
+            for (int ty = y + 1, tx = x - 1; ty <= 7 && tx >= 0; ty++, tx--) if (state.squares[tx | ty << 3] != friend) { lost++; break; }
+            if (lost == 1) {
+                for (int ty = y - 1, tx = x + 1; ty >= 0 && tx <= 7; ty--, tx++) if (state.squares[tx | ty << 3] != friend) return false;
+            }
+
+            return true;
+        }
+
         //Precondition: the given coordinates are a legal move for the current player.
         public static GameState getTransformedBoard(GameState past, int x, int y) {
             GameState result = new GameState();
@@ -83,107 +118,36 @@ namespace ReversiAI {
             result.squares[index] = past.nextTurn;
 
             #region Cascade
-            //cascade changes in all directions
-            //left
-            for (int dx = x - 1; dx >= 0; dx--) {
-                if (result.squares[index - x + dx] == 0) {
-                    break;
-                }
-                if (result.squares[index - x + dx] == result.nextTurn) {
-                    while (++dx < x) {
-                        result.squares[index - x + dx] = result.nextTurn;
+            int dx, dy, rx, ry;
+            for (dx = -1; dx < 2; dx++) { //-1, 0, +1
+                for (dy = -8; dy < 16; dy += 8) { //-8, 0, +8
+                    if (dx == 0 && dy == 0) continue; // skip 0,0
+                    rx = x + dx;
+                    ry = (y << 3) + dy;
+                    //if it's in bounds and an enemy token
+                    if (rx >= 0 && rx < 8 && ry >= 0 && ry < 64 && past.squares[rx | ry] == (past.nextTurn ^ 3)) {
+                        rx += dx;
+                        ry += dy;
+                        //while we're still in bounds, try to find a friend token
+                        while (rx >= 0 && rx < 8 && ry >= 0 && ry < 64) {
+                            if (past.squares[rx | ry] == past.nextTurn) {
+                                //reverse and flip!
+                                rx -= dx;
+                                ry -= dy;
+                                while ((rx | ry) != index) {
+                                    result.squares[rx | ry] = past.nextTurn;
+                                    rx -= dx;
+                                    ry -= dy;
+                                }
+                                break;
+                            }
+                            if (past.squares[rx | ry] == 0) {
+                                break;
+                            }
+                            rx += dx;
+                            ry += dy;
+                        }
                     }
-                    break;
-                }
-            }
-            //right
-            for (int dx = x + 1; dx < 8; dx++) {
-                if (result.squares[index - x + dx] == 0) {
-                    break;
-                }
-                if (result.squares[index - x + dx] == result.nextTurn) {
-                    while (--dx > x) {
-                        result.squares[index - x + dx] = result.nextTurn;
-                    }
-                    break;
-                }
-            }
-            //up
-            for (int dy = y - 1; dy >= 0; dy--) {
-                if (result.squares[index + (dy - y << 3)] == 0) {
-                    break;
-                }
-                if (result.squares[index + (dy - y << 3)] == result.nextTurn) {
-                    while (++dy < y) {
-                        result.squares[index + (dy - y << 3)] = result.nextTurn;
-                    }
-                    break;
-                }
-            }
-            //down
-            for (int dy = y + 1; dy < 8; dy++) {
-                if (result.squares[index + (dy - y << 3)] == 0) {
-                    break;
-                }
-                if (result.squares[index + (dy - y << 3)] == result.nextTurn) {
-                    while (--dy > y) {
-                        result.squares[index + (dy - y << 3)] = result.nextTurn;
-                    }
-                    break;
-                }
-            }
-
-
-            //upleft
-            for (int dx = x - 1, dy = y - 1; dx >= 0 && dy >= 0; dx--, dy--) {
-                if (result.squares[index + (dy - y << 3) + (dx - x)] == 0) {
-                    break;
-                }
-                if (result.squares[index + (dy - y << 3) + (dx - x)] == result.nextTurn) {
-                    while (++dy < y) {
-                        ++dx;
-                        result.squares[index + (dy - y << 3) + (dx - x)] = result.nextTurn;
-                    }
-                    break;
-                }
-            }
-            //upright
-            for (int dx = x + 1, dy = y - 1; dx < 8 && dy >= 0; dx++, dy--) {
-                if (result.squares[index + (dy - y << 3) + (dx - x)] == 0) {
-                    break;
-                }
-                if (result.squares[index + (dy - y << 3) + (dx - x)] == result.nextTurn) {
-                    while (++dy < y) {
-                        --dx;
-                        result.squares[index + (dy - y << 3) + (dx - x)] = result.nextTurn;
-                    }
-                    break;
-                }
-            }
-            //downright
-            for (int dx = x + 1, dy = y + 1; dx < 8 && dy < 8; dx++, dy++) {
-                if (result.squares[index + (dy - y << 3) + (dx - x)] == 0) {
-                    break;
-                }
-                if (result.squares[index + (dy - y << 3) + (dx - x)] == result.nextTurn) {
-                    while (--dy > y) {
-                        --dx;
-                        result.squares[index + (dy - y << 3) + (dx - x)] = result.nextTurn;
-                    }
-                    break;
-                }
-            }
-            //downleft
-            for (int dx = x - 1, dy = y + 1; dx >= 0 && dy < 8; dx--, dy++) {
-                if (result.squares[index + (dy - y << 3) + (dx - x)] == 0) {
-                    break;
-                }
-                if (result.squares[index + (dy - y << 3) + (dx - x)] == result.nextTurn) {
-                    while (--dy > y) {
-                        ++dx;
-                        result.squares[index + (dy - y << 3) + (dx - x)] = result.nextTurn;
-                    }
-                    break;
                 }
             }
             #endregion Cascade
