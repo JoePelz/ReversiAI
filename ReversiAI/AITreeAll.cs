@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace ReversiAI {
     public class AITreeAll : IReversiAI {
-        public byte levels;
+        private byte levels;
+        private int statesVisited;
+        private Node root;
         
         /// <summary>
         /// Constructor, creates an empty AI (no root yet in the game tree)
@@ -15,6 +17,7 @@ namespace ReversiAI {
         /// <param name="levels">The maximum number of levels to search for the solution. </param>
         public AITreeAll(byte levels) {
             this.levels = levels;
+            statesVisited = 0;
         }
 
         /// <summary>
@@ -23,11 +26,13 @@ namespace ReversiAI {
         /// <param name="state">The current state of the game.  Throws exception on null.</param>
         /// <returns>The index in the board to put the next token.</returns>
         public byte getNextMove(GameState state) {
-            Node root = new Node(state);
+            updateRoot(state);
+            //root = new Node(state);
+            statesVisited = 1;
             //Build the entire game tree, expanding ALL branches
-            root.growAll(levels);
+            statesVisited += root.growAll(levels);
             byte best = 255;
-            int minWorst = 0, tempWorst;
+            int minWorst = int.MinValue, tempWorst;
             //for each option, get the worst case that could result from making the move.
             //  (after _levels_ of branching)
             foreach (var kvp in root.children) {
@@ -37,7 +42,23 @@ namespace ReversiAI {
                     minWorst = tempWorst;
                 }
             }
+            Console.WriteLine("minWorst: " + minWorst + ", best = (" + (best & 7) + ", " + (best >> 3) + ")");
+            Console.WriteLine("  Game states examined: " + statesVisited);
+            root = root.children[best];
             return best;
+        }
+
+        //reuse the game tree if possible!
+        private void updateRoot(GameState state) {
+            if (root != null) {
+                foreach (var kvp in root.children) {
+                    if (kvp.Value.value.Equals(state)) {
+                        root = kvp.Value;
+                        return;
+                    }
+                }
+            }
+            root = new Node(state);
         }
 
         /// <summary>
@@ -92,15 +113,18 @@ namespace ReversiAI {
             /// <param name="depth">How many levels deep to explore. 
             /// 1 examine all current move options. 
             /// 3 means examine options this turn, the opponent's options, and then what you would be able to do next turn.</param>
-            public void growAll(int depth) {
+            /// <returns>The number of game states visited.</returns>
+            public int growAll(int depth) {
+                int visits = 0;
                 if (depth <= 1) {
-                    return;
+                    return 1;
                 }
 
                 //getChild (to expand the child) and growAll (minus 1 depth level) to recurse.
                 foreach (byte i in children.Keys.ToList()) {
-                    getChild(i).growAll(depth - 1);
+                    visits += getChild(i).growAll(depth - 1);
                 }
+                return visits;
             }
 
             /// <summary>
@@ -137,8 +161,10 @@ namespace ReversiAI {
             /// <returns>The value of the board configuration for the given player</returns>
             public int evaluateBoard(GameState state, byte player) {
                 int numTilesOwned = getTilesOwned(state, player);
-                int numWeightsBonus = getWeightedTilesBonus(state, player);
-                return numTilesOwned + numWeightsBonus * 10;
+                //int numWeightsBonus = getWeightedTilesBonus(state, player);
+                int numStableTiles = getStableTiles(state, player);
+                int numLostStableTiles = getStableTiles(state, (byte)(player ^ 3));
+                return numTilesOwned + numStableTiles - numLostStableTiles;
             }
 
             private int getTilesOwned(GameState state, byte player) {
@@ -147,10 +173,10 @@ namespace ReversiAI {
 
             private int getWeightedTilesBonus(GameState state, byte player) {
                 int count = 0;
-                const int cornerValue = 5; //corner value
-                const int edgeValue = 3; //edge value
-                const int badC = -2; //offcorner edge (w/o corner)
-                const int badX = -2; //offcorner diagonal (w/o corner)
+                const int cornerValue = 3; //corner value
+                const int edgeValue = 2; //edge value
+                const int badC = -1; //offcorner edge (w/o corner)
+                const int badX = -1; //offcorner diagonal (w/o corner)
                 // 0  1 ..  6  7
                 // 8  9    14 15
                 // .           .
@@ -211,8 +237,11 @@ namespace ReversiAI {
 
             private int getStableTiles(GameState state, byte player) {
                 int count = 0;
-                //tile is stable if a line can no longer be flipped by the other team. (cannot be surrounded)
-
+                for(int i = 0; i < 64; i++) {
+                    if (state.squares[i] == player && GameState.isStable(state, i & 7, i >> 3)) {
+                        count++;
+                    }
+                }
                 return count;
             }
         }

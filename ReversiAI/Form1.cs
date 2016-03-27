@@ -77,20 +77,20 @@ namespace ReversiAI {
             panel_Game.updateBoard(state);
 
             if (state.nextTurn == 1) {
-                panel_nextPlayer.ForeColor = Color.Black;
-            } else {
                 panel_nextPlayer.ForeColor = Color.White;
+            } else {
+                panel_nextPlayer.ForeColor = Color.Black;
             }
             panel_nextPlayer.Invalidate();
 
             int black_counter = 0, white_counter = 0;
             for (int i = 0; i < 64; i++) {
-                if (state.squares[i] == 1) black_counter++;
-                else if (state.squares[i] == 2) white_counter++;
+                if (state.squares[i] == 1) white_counter++;
+                else if (state.squares[i] == 2) black_counter++;
             }
 
-            lbl_BlackCounter.Text = black_counter.ToString();
             lbl_WhiteCounter.Text = white_counter.ToString();
+            lbl_BlackCounter.Text = black_counter.ToString();
         }
 
         protected override void OnResize(EventArgs e) {
@@ -100,11 +100,11 @@ namespace ReversiAI {
             lblCurrentPlayer.Font = new Font(lblCurrentPlayer.Font.Name, size / 10,
                 lblCurrentPlayer.Font.Style, lblCurrentPlayer.Font.Unit);
 
-            size = lbl_BlackCounter.Width;
-            lbl_BlackCounter.Font = new Font(lbl_BlackCounter.Font.Name, size * 2 / 5,
-                lbl_BlackCounter.Font.Style, lbl_BlackCounter.Font.Unit);
+            size = lbl_WhiteCounter.Width;
             lbl_WhiteCounter.Font = new Font(lbl_WhiteCounter.Font.Name, size * 2 / 5,
                 lbl_WhiteCounter.Font.Style, lbl_WhiteCounter.Font.Unit);
+            lbl_BlackCounter.Font = new Font(lbl_BlackCounter.Font.Name, size * 2 / 5,
+                lbl_BlackCounter.Font.Style, lbl_BlackCounter.Font.Unit);
             lbl_Black.Font = new Font(lbl_Black.Font.Name, size * 2 / 5,
                 lbl_Black.Font.Style, lbl_Black.Font.Unit);
             lbl_White.Font = new Font(lbl_White.Font.Name, size * 2 / 5,

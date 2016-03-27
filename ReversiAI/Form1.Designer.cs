@@ -37,8 +37,8 @@
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.lbl_Black = new System.Windows.Forms.Label();
             this.lbl_White = new System.Windows.Forms.Label();
-            this.lbl_BlackCounter = new System.Windows.Forms.Label();
             this.lbl_WhiteCounter = new System.Windows.Forms.Label();
+            this.lbl_BlackCounter = new System.Windows.Forms.Label();
             this.lbl_Restart = new System.Windows.Forms.Label();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.combo_p1 = new System.Windows.Forms.ComboBox();
@@ -171,8 +171,8 @@
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
             this.tableLayoutPanel3.Controls.Add(this.lbl_Black, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.lbl_White, 2, 0);
-            this.tableLayoutPanel3.Controls.Add(this.lbl_BlackCounter, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.lbl_WhiteCounter, 3, 0);
+            this.tableLayoutPanel3.Controls.Add(this.lbl_WhiteCounter, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.lbl_BlackCounter, 3, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 104);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -186,11 +186,12 @@
             this.lbl_Black.AutoSize = true;
             this.lbl_Black.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbl_Black.Font = new System.Drawing.Font("Script MT Bold", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_Black.ForeColor = System.Drawing.Color.White;
             this.lbl_Black.Location = new System.Drawing.Point(46, 0);
             this.lbl_Black.Name = "lbl_Black";
             this.lbl_Black.Size = new System.Drawing.Size(96, 42);
             this.lbl_Black.TabIndex = 0;
-            this.lbl_Black.Text = "Black";
+            this.lbl_Black.Text = "White";
             this.lbl_Black.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lbl_White
@@ -198,38 +199,39 @@
             this.lbl_White.AutoSize = true;
             this.lbl_White.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbl_White.Font = new System.Drawing.Font("Script MT Bold", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_White.ForeColor = System.Drawing.Color.Black;
             this.lbl_White.Location = new System.Drawing.Point(148, 0);
             this.lbl_White.Name = "lbl_White";
             this.lbl_White.Size = new System.Drawing.Size(96, 42);
             this.lbl_White.TabIndex = 1;
-            this.lbl_White.Text = "White";
+            this.lbl_White.Text = "Black";
             this.lbl_White.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lbl_BlackCounter
-            // 
-            this.lbl_BlackCounter.BackColor = System.Drawing.Color.Green;
-            this.lbl_BlackCounter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbl_BlackCounter.Font = new System.Drawing.Font("Script MT Bold", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_BlackCounter.ForeColor = System.Drawing.Color.Black;
-            this.lbl_BlackCounter.Location = new System.Drawing.Point(3, 0);
-            this.lbl_BlackCounter.Name = "lbl_BlackCounter";
-            this.lbl_BlackCounter.Size = new System.Drawing.Size(37, 42);
-            this.lbl_BlackCounter.TabIndex = 2;
-            this.lbl_BlackCounter.Text = "2";
-            this.lbl_BlackCounter.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lbl_WhiteCounter
             // 
             this.lbl_WhiteCounter.BackColor = System.Drawing.Color.Green;
             this.lbl_WhiteCounter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbl_WhiteCounter.Font = new System.Drawing.Font("Script MT Bold", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_WhiteCounter.ForeColor = System.Drawing.Color.White;
-            this.lbl_WhiteCounter.Location = new System.Drawing.Point(250, 0);
-            this.lbl_WhiteCounter.Name = "lbl_WhiteCounter";
-            this.lbl_WhiteCounter.Size = new System.Drawing.Size(39, 42);
-            this.lbl_WhiteCounter.TabIndex = 3;
+            this.lbl_WhiteCounter.Location = new System.Drawing.Point(3, 0);
+            this.lbl_WhiteCounter.Name = "lbl_BlackCounter";
+            this.lbl_WhiteCounter.Size = new System.Drawing.Size(37, 42);
+            this.lbl_WhiteCounter.TabIndex = 2;
             this.lbl_WhiteCounter.Text = "2";
             this.lbl_WhiteCounter.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbl_WhiteCounter
+            // 
+            this.lbl_BlackCounter.BackColor = System.Drawing.Color.Green;
+            this.lbl_BlackCounter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbl_BlackCounter.Font = new System.Drawing.Font("Script MT Bold", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_BlackCounter.ForeColor = System.Drawing.Color.Black;
+            this.lbl_BlackCounter.Location = new System.Drawing.Point(250, 0);
+            this.lbl_BlackCounter.Name = "lbl_WhiteCounter";
+            this.lbl_BlackCounter.Size = new System.Drawing.Size(39, 42);
+            this.lbl_BlackCounter.TabIndex = 3;
+            this.lbl_BlackCounter.Text = "2";
+            this.lbl_BlackCounter.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbl_Restart
             // 
@@ -301,6 +303,7 @@
             this.lbl_P1.AutoSize = true;
             this.lbl_P1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.lbl_P1.Font = new System.Drawing.Font("Script MT Bold", 15F);
+            this.lbl_P1.ForeColor = System.Drawing.Color.White;
             this.lbl_P1.Location = new System.Drawing.Point(3, 6);
             this.lbl_P1.Name = "lbl_P1";
             this.lbl_P1.Size = new System.Drawing.Size(140, 24);
@@ -313,6 +316,7 @@
             this.lbl_P2.AutoSize = true;
             this.lbl_P2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.lbl_P2.Font = new System.Drawing.Font("Script MT Bold", 15F);
+            this.lbl_P2.ForeColor = System.Drawing.Color.Black;
             this.lbl_P2.Location = new System.Drawing.Point(149, 6);
             this.lbl_P2.Name = "lbl_P2";
             this.lbl_P2.Size = new System.Drawing.Size(140, 24);
@@ -413,8 +417,8 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.Label lbl_Black;
         private System.Windows.Forms.Label lbl_White;
-        private System.Windows.Forms.Label lbl_BlackCounter;
         private System.Windows.Forms.Label lbl_WhiteCounter;
+        private System.Windows.Forms.Label lbl_BlackCounter;
         private System.Windows.Forms.Label lbl_Overlay;
         private System.Windows.Forms.Label lbl_Restart;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;

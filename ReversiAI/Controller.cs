@@ -191,11 +191,11 @@ namespace ReversiAI {
             }
             int black_counter = 0, white_counter = 0;
             for (int i = 0; i < 64; i++) {
-                if (state.squares[i] == 1) black_counter++;
-                else if (state.squares[i] == 2) white_counter++;
+                if (state.squares[i] == 1) white_counter++;
+                else if (state.squares[i] == 2) black_counter++;
             }
-            if (black_counter == white_counter) return 3;
-            return black_counter > white_counter ? 1 : 2;
+            if (white_counter == black_counter) return 3;
+            return white_counter > black_counter ? 1 : 2;
         }
         
         /// <summary>

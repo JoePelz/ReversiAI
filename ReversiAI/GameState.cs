@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ReversiAI {
     public class GameState {
-        /*  The next player to play. 1 is black, 2 is white. */
+        /*  The next player to play. 1 is white, 2 is black. */
         public byte nextTurn = 1;
         public byte[] squares = new byte[64];
 
@@ -159,6 +159,16 @@ namespace ReversiAI {
             }
 
             return result;
+        }
+
+        public bool Equals(GameState other) {
+            if (nextTurn != other.nextTurn) return false;
+
+            for (int i = 0; i < 64; i++) {
+                if (squares[i] != other.squares[i]) return false;
+            }
+
+            return true;
         }
     }
 }

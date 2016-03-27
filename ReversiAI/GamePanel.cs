@@ -68,9 +68,9 @@ namespace ReversiAI {
             }
             for (int i = 0; i < 64; i++) {
                 if (oldState.squares[i] == 1) {
-                    g.FillEllipse(Brushes.Black, new Rectangle(locations[i], squareSize));
-                } else if (oldState.squares[i] == 2) {
                     g.FillEllipse(Brushes.White, new Rectangle(locations[i], squareSize));
+                } else if (oldState.squares[i] == 2) {
+                    g.FillEllipse(Brushes.Black, new Rectangle(locations[i], squareSize));
                 }
             }
         }
@@ -80,9 +80,9 @@ namespace ReversiAI {
             for(int i = 0; i < 64; i++) {
                 if (newState.squares[i] != oldState.squares[i]) {
                     if (newState.squares[i] == 1) {
-                        g.FillEllipse(Brushes.Black, new Rectangle(locations[i], squareSize));
-                    } else if (newState.squares[i] == 2) {
                         g.FillEllipse(Brushes.White, new Rectangle(locations[i], squareSize));
+                    } else if (newState.squares[i] == 2) {
+                        g.FillEllipse(Brushes.Black, new Rectangle(locations[i], squareSize));
                     }
                     oldState.squares[i] = newState.squares[i];
                 }
