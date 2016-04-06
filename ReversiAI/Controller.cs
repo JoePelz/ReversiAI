@@ -11,7 +11,7 @@ namespace ReversiAI {
         public static string[] players = new string[] {
             "Human", "AI Random", "AI Maximize", "AI Minimize", "AI First",
             "2-Depth Tree", "3-Depth Tree", "4-Depth Tree",
-            "5-Depth Tree", "6-Depth Tree", "7-Depth Tree" };
+            "5-Depth Tree", "6-Depth Tree", "7-Depth Tree"};
         public static IReversiAI getAI(Player sel) {
             switch (sel) {
                 case Player.Max: return new AIMaximize();
