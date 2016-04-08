@@ -207,27 +207,27 @@
             this.lbl_White.Text = "Black";
             this.lbl_White.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // lbl_BlackCounter
+            // lbl_WhiteCounter
             // 
             this.lbl_WhiteCounter.BackColor = System.Drawing.Color.Green;
             this.lbl_WhiteCounter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbl_WhiteCounter.Font = new System.Drawing.Font("Script MT Bold", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_WhiteCounter.ForeColor = System.Drawing.Color.White;
             this.lbl_WhiteCounter.Location = new System.Drawing.Point(3, 0);
-            this.lbl_WhiteCounter.Name = "lbl_BlackCounter";
+            this.lbl_WhiteCounter.Name = "lbl_WhiteCounter";
             this.lbl_WhiteCounter.Size = new System.Drawing.Size(37, 42);
             this.lbl_WhiteCounter.TabIndex = 2;
             this.lbl_WhiteCounter.Text = "2";
             this.lbl_WhiteCounter.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lbl_WhiteCounter
+            // lbl_BlackCounter
             // 
             this.lbl_BlackCounter.BackColor = System.Drawing.Color.Green;
             this.lbl_BlackCounter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbl_BlackCounter.Font = new System.Drawing.Font("Script MT Bold", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_BlackCounter.ForeColor = System.Drawing.Color.Black;
             this.lbl_BlackCounter.Location = new System.Drawing.Point(250, 0);
-            this.lbl_BlackCounter.Name = "lbl_WhiteCounter";
+            this.lbl_BlackCounter.Name = "lbl_BlackCounter";
             this.lbl_BlackCounter.Size = new System.Drawing.Size(39, 42);
             this.lbl_BlackCounter.TabIndex = 3;
             this.lbl_BlackCounter.Text = "2";

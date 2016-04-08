@@ -52,7 +52,7 @@ namespace ReversiAI {
         private void updateRoot(GameState state) {
             if (root != null) {
                 foreach (var kvp in root.children) {
-                    if (kvp.Value.value.Equals(state)) {
+                    if (kvp.Value != null && kvp.Value.value.Equals(state)) {
                         root = kvp.Value;
                         return;
                     }
@@ -164,7 +164,7 @@ namespace ReversiAI {
                 //int numWeightsBonus = getWeightedTilesBonus(state, player);
                 int numStableTiles = getStableTiles(state, player);
                 int numLostStableTiles = getStableTiles(state, (byte)(player ^ 3));
-                return numTilesOwned + numStableTiles - numLostStableTiles;
+                return numTilesOwned + numStableTiles * 64 - numLostStableTiles * 64;
             }
 
             private int getTilesOwned(GameState state, byte player) {
