@@ -143,7 +143,7 @@ namespace ReversiAI {
             }
         }
 
-        internal void batchComplete(int[] batchResults, Dictionary<string, double> p1, Dictionary<string, double> p2) {
+        internal void batchComplete(int[] batchResults, GameStats p1, GameStats p2) {
             MessageBox.Show("Batch Results:"
                 + "\nError cases: " + batchResults[0]
                 + "\nPlayer 1 wins: " + batchResults[1]
@@ -153,12 +153,10 @@ namespace ReversiAI {
             displayStats(p2, "Player 2:", "Batch Stats");
         }
 
-        public void displayStats(Dictionary<string, double> stats, string caption, string title) {
+        public void displayStats(GameStats stats, string caption, string title) {
             StringBuilder sb = new StringBuilder(caption + "\n");
 
-            foreach (var kvp in stats) {
-                sb.Append(kvp.Key + kvp.Value + "\n");
-            }
+            sb.Append(stats.ToString());
 
             MessageBox.Show(sb.ToString(), title);
         }

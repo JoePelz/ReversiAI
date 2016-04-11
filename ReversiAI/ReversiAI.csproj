@@ -84,6 +84,7 @@
     </Compile>
     <Compile Include="GameState.cs" />
     <Compile Include="GameStats.cs" />
+    <Compile Include="NegaMax.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IReversiAI.cs" />

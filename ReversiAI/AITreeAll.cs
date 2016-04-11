@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -7,17 +8,20 @@ using System.Threading.Tasks;
 
 namespace ReversiAI {
     public class AITreeAll : IReversiAI {
-        Dictionary<string, double> stats = new Dictionary<string, double>();
+        GameStats stats = new GameStats();
         private byte levels;
         private int statesVisited;
         private Node root;
+        private Stopwatch timer;
         
         /// <summary>
         /// Constructor, creates an empty AI (no root yet in the game tree)
         /// </summary>
         /// <param name="levels">The maximum number of levels to search for the solution. </param>
         public AITreeAll(byte levels) {
+            timer = new Stopwatch();
             this.levels = levels;
+            stats.augmentDepth(levels);
             statesVisited = 0;
         }
 
@@ -27,11 +31,16 @@ namespace ReversiAI {
         /// <param name="state">The current state of the game.  Throws exception on null.</param>
         /// <returns>The index in the board to put the next token.</returns>
         public byte getNextMove(GameState state) {
+            timer.Restart();
             updateRoot(state);
             //root = new Node(state);
             statesVisited = 1;
+            
+            
             //Build the entire game tree, expanding ALL branches
             statesVisited += root.growAll(levels);
+
+            
             byte best = 255;
             int minWorst = int.MinValue, tempWorst;
             //for each option, get the worst case that could result from making the move.
@@ -43,8 +52,14 @@ namespace ReversiAI {
                     minWorst = tempWorst;
                 }
             }
-            Console.WriteLine("minWorst: " + minWorst + ", best = (" + (best & 7) + ", " + (best >> 3) + ")");
-            Console.WriteLine("  Game states examined: " + statesVisited);
+
+            //update stats object
+            timer.Stop();
+            stats.branches += root.children.Count();
+            stats.turnsRepresented++;
+            stats.augmentTime(timer.ElapsedMilliseconds / 1000.0);
+            stats.augmentLeaves(statesVisited);
+
             root = root.children[best];
             return best;
         }
@@ -70,7 +85,7 @@ namespace ReversiAI {
             //do nothing--yet!
         }
 
-        public Dictionary<string, double> getStats() {
+        public GameStats getStats() {
             return stats;
         }
 

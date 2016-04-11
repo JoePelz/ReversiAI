@@ -10,6 +10,6 @@ namespace ReversiAI {
 
         void setConfiguration(Dictionary<string, object> config);
 
-        Dictionary<string, double> getStats();
+        GameStats getStats();
     }
 }

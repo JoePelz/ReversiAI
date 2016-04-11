@@ -36,8 +36,8 @@ namespace ReversiAI {
 
         private int batchGamesComplete;
         private int[] batchResults;
-        Dictionary<string, double> batchStatsP1;
-        Dictionary<string, double> batchStatsP2;
+        GameStats batchStatsP1;
+        GameStats batchStatsP2;
 
         public bool HumanTurn { get { return humanTurn; } }
 
@@ -178,8 +178,8 @@ namespace ReversiAI {
         public void doBatch(int numGames) {
             batchGamesComplete = 0;
             batchResults = new int[4];
-            batchStatsP1 = new Dictionary<string, double>();
-            batchStatsP2 = new Dictionary<string, double>();
+            batchStatsP1 = new GameStats();
+            batchStatsP2 = new GameStats();
             Array.Clear(batchResults, 0, 4);
             Task[] gamesToPlay = new Task[numGames];
             Player p1 = gui.getPlayerSelection(1);
@@ -195,8 +195,8 @@ namespace ReversiAI {
             lock(this) {
                 batchGamesComplete++;
                 batchResults[result]++;
-                mergeStats(batchStatsP1, p1.getStats());
-                mergeStats(batchStatsP2, p2.getStats());
+                batchStatsP1.mergeStats(p1.getStats());
+                batchStatsP2.mergeStats(p2.getStats());
             }
         }
 

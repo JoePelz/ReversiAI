@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace ReversiAI {
     public class AIFirst : IReversiAI {
-        Dictionary<string, double> stats = new Dictionary<string, double>();
-        int turnsTaken;
-        int choices;
+        GameStats stats = new GameStats();
 
         public byte getNextMove(GameState state) {
             var moves = GameState.getValidMoves(state, state.nextTurn);
-            choices += moves.Count((b) => { return b > 0; });
-            turnsTaken++;
+            stats.branches += moves.Count((b) => { return b > 0; });
+            stats.turnsRepresented++;
 
             for (byte i = 0; i < 64; i++) {
                 if (moves[i] > 0) {
@@ -23,8 +21,7 @@ namespace ReversiAI {
             return 255;
         }
 
-        public Dictionary<string, double> getStats() {
-            stats["Average Branching: "] = (double)choices / turnsTaken;
+        public GameStats getStats() {
             return stats;
         }
 
