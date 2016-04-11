@@ -21,13 +21,14 @@ namespace ReversiAI {
             public bool evaluated; //set, used
             public Type type; //set. may be wrong??
             public Node parent; //used
+            public int depth;
         }
         GameStats stats = new GameStats();
-        private byte levels;
         private int statesVisited;
         private Stopwatch timer;
         private int timeLimit;
         private byte goalWinner;
+        private int depth;
         /// <summary>
         /// Constructor, creates an empty AI (no root yet in the game tree)
         /// </summary>
@@ -46,8 +47,10 @@ namespace ReversiAI {
             statesVisited = 1;
             goalWinner = state.nextTurn;
 
+            depth = 0;
             Node root = new Node();
             root.state = state;
+            root.depth = 0;
             ProofNumberSearch(root);
             byte result = 255;
             result = (byte)ChoseMove(root);
@@ -58,7 +61,7 @@ namespace ReversiAI {
             stats.turnsRepresented++;
             stats.augmentTime(timer.ElapsedMilliseconds / 1000.0);
             stats.augmentLeaves(statesVisited);
-            stats.augmentDepth(levels);
+            stats.augmentDepth(depth);
 
             return result;
         }
@@ -175,18 +178,24 @@ namespace ReversiAI {
                 Node temp = new Node();
                 temp.move = move;
                 temp.state = GameState.getTransformedBoard(node.state, move & 7, move >> 3);
+                statesVisited++;
                 temp.parent = node;
+                temp.depth = node.depth + 1;
                 node.children.Add(temp);
             }
+            if (node.depth + 1 > depth) depth = node.depth + 1;
+
             foreach (var n in node.children) {
                 Evaluate(n);
                 SetProofAndDisproofNumbers(n);
             }
-            node.expanded = true;
+            if (node.value == Value.Unknown) {
+                node.expanded = true;
+            }
         }
 
         private bool ResourcesAvailable() {
-            if (timer.ElapsedMilliseconds < 10000) {
+            if (timer.ElapsedMilliseconds < timeLimit) {
                 return true;
             }
             return false;
@@ -213,9 +222,7 @@ namespace ReversiAI {
         }
 
         public void setConfiguration(AIConfiguration config) {
-            levels = (byte)config.maxDepth;
-            stats.augmentDepth(levels);
-            timeLimit = config.maxTime;
+            timeLimit = config.maxTime * 1000;
         }
 
         public GameStats getStats() {
