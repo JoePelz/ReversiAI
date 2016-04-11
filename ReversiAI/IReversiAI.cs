@@ -8,7 +8,7 @@ namespace ReversiAI {
     public interface IReversiAI {
         byte getNextMove(GameState state);
 
-        void setConfiguration(Dictionary<string, object> config);
+        void setConfiguration(AIConfiguration config);
 
         GameStats getStats();
     }

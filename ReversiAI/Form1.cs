@@ -12,8 +12,9 @@ using System.Windows.Forms;
 namespace ReversiAI {
 
     public partial class Form1 : Form {
-        private Controller controller;
         public delegate void GameState_InvokeDelegate(GameState state);
+        private Controller controller;
+        private configAI configDialog;
 
         public Form1() {
             InitializeComponent();
@@ -25,6 +26,7 @@ namespace ReversiAI {
             combo_p2.SelectedIndex = 0;
             combo_p1.SelectedIndex = 0;
             controller = new Controller(this);
+            configDialog = new configAI();
         }
 
         private delegate void setWinnerHandler(int winner);
@@ -138,8 +140,6 @@ namespace ReversiAI {
             if (lbl_Overlay.Text.Equals("Start Game")) {
                 controller.startGame();
                 lbl_Overlay.Visible = false;
-                combo_p2.Enabled = false;
-                combo_p1.Enabled = false;
             }
         }
 
@@ -161,6 +161,14 @@ namespace ReversiAI {
             MessageBox.Show(sb.ToString(), title);
         }
 
+        internal void setAI(AIConfiguration cfg) {
+            if (cfg.player == 1) {
+                combo_p1.SelectedIndex = (int)cfg.AI;
+            } else if (cfg.player == 2) {
+                combo_p2.SelectedIndex = (int)cfg.AI;
+            }
+        }
+
         private void lbl_Restart_MouseEnter(object sender, EventArgs e) {
             (sender as Label).BackColor = Color.OliveDrab;
         }
@@ -172,8 +180,6 @@ namespace ReversiAI {
         private void lbl_Restart_Click(object sender, EventArgs e) {
             lbl_Overlay.Text = "Start Game";
             lbl_Overlay.Visible = true;
-            combo_p2.Enabled = true;
-            combo_p1.Enabled = true;
             controller.resetGame();
         }
 
@@ -188,6 +194,18 @@ namespace ReversiAI {
             } else if (sender == lbl_statsP2) {
                 controller.printStats(2);
             }
+        }
+
+        private void configure_AI(object sender, EventArgs e) {
+            if ((sender as Label).Tag.Equals("p1")) {
+                configDialog.setController(controller, controller.cfg1);
+            } else if ((sender as Label).Tag.Equals("p2")) {
+                configDialog.setController(controller, controller.cfg2);
+            } else {
+                MessageBox.Show("configure_AI error.");
+                return;
+            }
+            configDialog.ShowDialog(this);
         }
     }
 }

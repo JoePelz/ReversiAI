@@ -7,29 +7,25 @@ using System.Threading.Tasks;
 
 namespace ReversiAI {
     public class Controller {
-        public enum Player { Human, Random, Max, Min, First, Tree2, Tree3, Tree4, Tree5, Tree6, Tree7 }
+        public enum Player { Human, Random, Max, Min, First, Tree, Negamax }
         public static string[] players = new string[] {
             "Human", "AI Random", "AI Maximize", "AI Minimize", "AI First",
-            "2-Depth Tree", "3-Depth Tree", "4-Depth Tree",
-            "5-Depth Tree", "6-Depth Tree", "7-Depth Tree"};
-        public static IReversiAI getAI(Player sel) {
-            switch (sel) {
+            "Full Tree", "NegaMax"};
+        public static IReversiAI getAI(AIConfiguration cfg) {
+            switch (cfg.AI) {
                 case Player.Max: return new AIMaximize();
                 case Player.Min: return new AIMinimize();
                 case Player.Random: return new AIRandom();
                 case Player.First: return new AIFirst();
-                case Player.Tree2: return new AITreeAll(2);
-                case Player.Tree3: return new AITreeAll(3);
-                case Player.Tree4: return new AITreeAll(4);
-                case Player.Tree5: return new AITreeAll(5);
-                case Player.Tree6: return new AITreeAll(6);
-                case Player.Tree7: return new AITreeAll(7);
+                case Player.Tree: return new AITreeAll();
+                case Player.Negamax: return new AINegaMax();
                 default: return null;
             }
         }
 
 
         private IReversiAI player1, player2;
+        public AIConfiguration cfg1, cfg2;
         private GameState state;
         private Form1 gui;
         private bool humanTurn;
@@ -44,6 +40,10 @@ namespace ReversiAI {
         public Controller(Form1 owner) {
             state = GameState.createInitialSetup();
             gui = owner;
+            cfg1 = new AIConfiguration();
+            cfg1.player = 1;
+            cfg2 = new AIConfiguration();
+            cfg2.player = 2;
 
             //TimeProfiler tp = new TimeProfiler();
             //tp.runTests();
@@ -54,8 +54,10 @@ namespace ReversiAI {
         /// and begins the first turn.
         /// </summary>
         public void startGame() {
-            player1 = getAI(gui.getPlayerSelection(1));
-            player2 = getAI(gui.getPlayerSelection(2));
+            player1 = getAI(cfg1);
+            if (player1 != null) player1.setConfiguration(cfg1);
+            player2 = getAI(cfg2);
+            if (player2 != null) player2.setConfiguration(cfg2);
             beginTurn();
         }
 
@@ -93,6 +95,9 @@ namespace ReversiAI {
             IReversiAI engine = getPlayer();
             if (engine != null) {
                 move = engine.getNextMove(state);
+            }
+            if (move == 255) {
+                System.Windows.Forms.MessageBox.Show("Error getting next move. Please restart the game.");
             }
             return move;
         }
@@ -149,15 +154,29 @@ namespace ReversiAI {
             }
         }
 
+        public void saveConfig(AIConfiguration ai) {
+            if (ai.player == 1) {
+                cfg1 = ai;
+                gui.setAI(cfg1);
+            } else if (ai.player == 2) {
+                cfg2 = ai;
+                gui.setAI(cfg2);
+            } else {
+                System.Windows.Forms.MessageBox.Show("Error in Controller::saveConfig.");
+            }
+        }
+
         public static int applyMoveBatch(ref GameState state, int x, int y) {
             state = GameState.getTransformedBoard(state, x, y);
             return getWinner(state);
         }
 
-        public static int playGame(Controller ctrl, Player p1, Player p2) {
+        public static int playGame(Controller ctrl, AIConfiguration p1, AIConfiguration p2) {
             int winner = 0;
             IReversiAI ai1 = getAI(p1);
+            ai1.setConfiguration(p1);
             IReversiAI ai2 = getAI(p2);
+            ai2.setConfiguration(p2);
             if (ai1 == null || ai2 == null) {
                 return winner;
             }
@@ -185,7 +204,7 @@ namespace ReversiAI {
             Player p1 = gui.getPlayerSelection(1);
             Player p2 = gui.getPlayerSelection(2);
             for (int i = 0; i < numGames; i++) {
-                gamesToPlay[i] = Task.Factory.StartNew(() => { playGame(this, p1, p2); });
+                gamesToPlay[i] = Task.Factory.StartNew(() => { playGame(this, cfg1, cfg2); });
             }
             Task.WaitAll(gamesToPlay);
             gui.batchComplete(batchResults, batchStatsP1, batchStatsP2);
@@ -197,16 +216,6 @@ namespace ReversiAI {
                 batchResults[result]++;
                 batchStatsP1.mergeStats(p1.getStats());
                 batchStatsP2.mergeStats(p2.getStats());
-            }
-        }
-
-        private void mergeStats(Dictionary<string, double> into, Dictionary<string, double> from) {
-            foreach (var key in from.Keys) {
-                if (into.ContainsKey(key)) {
-                    into[key] = (into[key] * (batchGamesComplete - 1) + from[key]) / batchGamesComplete;
-                } else {
-                    into[key] = from[key];
-                }
             }
         }
 

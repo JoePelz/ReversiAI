@@ -25,7 +25,7 @@ namespace ReversiAI {
             return stats;
         }
 
-        public void setConfiguration(Dictionary<string, object> config) {
+        public void setConfiguration(AIConfiguration config) {
             //do nothing. No configuration possible.
         }
     }

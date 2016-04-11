@@ -7,25 +7,31 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace ReversiAI {
-    public class Negamax : IReversiAI {
+    public class AINegaMax : IReversiAI {
         public struct Score {
-            int value;
-            int move;
+            public int value;
+            public byte move;
+            public Score(byte m, int v) {
+                move = m;
+                value = v;
+            }
+
+            public static Score operator -(Score s) {
+                return new Score(s.move, -s.value);
+            }
         }
 
         GameStats stats = new GameStats();
         private byte levels;
         private int statesVisited;
         private Stopwatch timer;
-
+        private bool pruning;
         /// <summary>
         /// Constructor, creates an empty AI (no root yet in the game tree)
         /// </summary>
         /// <param name="levels">The maximum number of levels to search for the solution. </param>
-        public Negamax(byte levels) {
+        public AINegaMax() {
             timer = new Stopwatch();
-            this.levels = levels;
-            stats.augmentDepth(levels);
             statesVisited = 0;
         }
 
@@ -36,20 +42,25 @@ namespace ReversiAI {
         /// <returns>The index in the board to put the next token.</returns>
         public byte getNextMove(GameState state) {
             timer.Restart();
+            statesVisited = 1;
 
 
-            var result = negamax(state, levels, int.MinValue, int.MaxValue, state.nextTurn * -2 + 3);
-
+            Score result;
+            if (pruning) {
+                result = negamax_pruning(state, levels, int.MinValue, int.MaxValue, state.nextTurn * -2 + 3);
+            } else {
+                result = negamax(state, levels, state.nextTurn * -2 + 3);
+            }
 
             //update stats object
             timer.Stop();
-            //stats.branches += root.children.Count();
+            stats.branches += GameState.getFilterValidMoves(state, state.nextTurn).Length;
             stats.turnsRepresented++;
             stats.augmentTime(timer.ElapsedMilliseconds / 1000.0);
             stats.augmentLeaves(statesVisited);
+            stats.augmentDepth(levels);
 
-            root = root.children[best];
-            return best;
+            return result.move;
         }
 
         /// <summary>
@@ -60,32 +71,61 @@ namespace ReversiAI {
         /// <param name="alpha"></param>
         /// <param name="beta"></param>
         /// <param name="player">1 means player 1, -1 means player 2</param>
-        private int negamax(GameState node, int depth, int alpha, int beta, int player) {
+        private Score negamax_pruning(GameState node, int depth, int alpha, int beta, int player) {
+            statesVisited++;
             if (depth == 0) {
-                return player * evaluateBoard(root.value);
+                return new Score(255, player * evaluateBoard(node));
             }
-                
-            options = 
 
-            int bestValue = int.MinValue;
-            
-            
-            /*
-            childNodes:= GenerateMoves(node)
-            childNodes:= OrderMoves(childNodes)
-            bestValue:= −∞
-            foreach child in childNodes
-                v:= −negamax(child, depth − 1, −β, −α, −color)
-                bestValue:= max(bestValue, v)
-                α:= max(α, v)
-                if α ≥ β
-                    break
-            */
+            var allMoves = GameState.getFilterValidMoves(node, node.nextTurn);
+            if (allMoves.Length == 0) {
+                return new Score(255, player * evaluateBoard(node));
+            }
+
+            Score v;
+            Score bestValue = new Score(255, int.MinValue);
+
+            foreach (var move in allMoves) {
+                v = -negamax_pruning(GameState.getTransformedBoard(node, move & 7, move >> 3), depth - 1, -beta, -alpha, -player);
+                if (v.value > bestValue.value) {
+                    bestValue.value = v.value;
+                    bestValue.move = move;
+                }
+                if (v.value > alpha) alpha = v.value;
+                if (alpha > beta) {
+                    break;
+                }
+            }
+            return bestValue;
+        }
+        private Score negamax(GameState node, int depth, int player) {
+            if (depth == 0) {
+                return new Score(255, player * evaluateBoard(node));
+            }
+            statesVisited++;
+
+            var allMoves = GameState.getFilterValidMoves(node, node.nextTurn);
+            if (allMoves.Length == 0) {
+                return new Score(255, player * evaluateBoard(node));
+            }
+
+            Score v;
+            Score bestValue = new Score(255, int.MinValue);
+
+            foreach (var move in allMoves) {
+                v = -negamax(GameState.getTransformedBoard(node, move & 7, move >> 3), depth - 1, -player);
+                if (v.value > bestValue.value) {
+                    bestValue.value = v.value;
+                    bestValue.move = move;
+                }
+            }
             return bestValue;
         }
 
-        public void setConfiguration(Dictionary<string, object> config) {
-            //do nothing--yet!
+        public void setConfiguration(AIConfiguration config) {
+            levels = (byte)config.maxDepth;
+            stats.augmentDepth(levels);
+            pruning = config.ABPruning;
         }
 
         public GameStats getStats() {

@@ -17,6 +17,14 @@ namespace ReversiAI {
             return s;
         }
 
+        /// <summary>
+        /// Creates an array of 64 entries. If a move is a valid move, then result[move] == 1.
+        /// </summary>
+        /// <param name="state">The start-point to search for moves from</param>
+        /// <param name="player">The player to find moves for</param>
+        /// <returns>An array of all board spaces, 
+        /// where result[move] == 1 if `move` is a valid move. 
+        /// Ex: [0, 0, 0, 1, 0, ...]</returns>
         public static byte[] getValidMoves(GameState state, byte player) {
             byte[] results = new byte[64];
             for (int i = 0; i < 64; i++) {
@@ -24,6 +32,24 @@ namespace ReversiAI {
                     results[i] = 1;
                 }
             }
+            return results;
+        }
+
+        /// <summary>
+        /// Creates an array of valid moves, where the value of each entry is a new move.
+        /// </summary>
+        /// <param name="state">The start-point to search for moves from</param>
+        /// <param name="player">The player to find moves for</param>
+        /// <returns>An array of all valid moves. Ex: [24, 25, 37].</returns>
+        public static byte[] getFilterValidMoves(GameState state, byte player) {
+            byte[] results = new byte[64];
+            int j = 0;
+            for (int i = 0; i < 64; i++) {
+                if (validMove(state, player, i & 7, i >> 3)) {
+                    results[j++] = (byte)i;
+                }
+            }
+            Array.Resize(ref results, j);
             return results;
         }
 
