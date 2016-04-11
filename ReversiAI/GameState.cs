@@ -132,6 +132,26 @@ namespace ReversiAI {
             return true;
         }
 
+        /// <summary>
+        /// Determine if a game is over and if so, who the winner is.
+        /// </summary>
+        /// <param name="state">The game board to check for a winner</param>
+        /// <returns>return 0 if no winner, return 1 if player 1 won, 
+        /// return 2 if player 2 won, return 3 if tie game.</returns>
+        public static int getWinner(GameState state) {
+            byte[] moves = GameState.getValidMoves(state, (byte)(state.nextTurn));
+            if (moves.Any((v) => { return v != 0; })) {
+                return 0;
+            }
+            int black_counter = 0, white_counter = 0;
+            for (int i = 0; i < 64; i++) {
+                if (state.squares[i] == 1) white_counter++;
+                else if (state.squares[i] == 2) black_counter++;
+            }
+            if (white_counter == black_counter) return 3;
+            return white_counter > black_counter ? 1 : 2;
+        }
+
         //Precondition: the given coordinates are a legal move for the current player.
         public static GameState getTransformedBoard(GameState past, int x, int y) {
             GameState result = new GameState();

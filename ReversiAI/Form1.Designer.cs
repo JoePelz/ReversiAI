@@ -28,8 +28,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.panel_Game = new ReversiAI.GamePanel(this.components);
-            this.lbl_Overlay = new System.Windows.Forms.Label();
             this.layout_rightALL = new System.Windows.Forms.TableLayoutPanel();
             this.layout_NextUp = new System.Windows.Forms.TableLayoutPanel();
             this.lblCurrentPlayer = new System.Windows.Forms.Label();
@@ -52,17 +50,19 @@
             this.layout_Batch = new System.Windows.Forms.TableLayoutPanel();
             this.num_batch = new System.Windows.Forms.NumericUpDown();
             this.lbl_Batch = new System.Windows.Forms.Label();
+            this.panel_Game = new ReversiAI.GamePanel(this.components);
+            this.lbl_Overlay = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.panel_Game.SuspendLayout();
             this.layout_rightALL.SuspendLayout();
             this.layout_NextUp.SuspendLayout();
             this.layout_Scores.SuspendLayout();
             this.layout_Options.SuspendLayout();
             this.layout_Batch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.num_batch)).BeginInit();
+            this.panel_Game.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -82,29 +82,6 @@
             this.splitContainer1.SplitterDistance = 457;
             this.splitContainer1.TabIndex = 0;
             this.splitContainer1.TabStop = false;
-            // 
-            // panel_Game
-            // 
-            this.panel_Game.BackColor = System.Drawing.Color.DarkOliveGreen;
-            this.panel_Game.Controls.Add(this.lbl_Overlay);
-            this.panel_Game.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel_Game.Location = new System.Drawing.Point(0, 0);
-            this.panel_Game.Name = "panel_Game";
-            this.panel_Game.Size = new System.Drawing.Size(457, 457);
-            this.panel_Game.TabIndex = 0;
-            // 
-            // lbl_Overlay
-            // 
-            this.lbl_Overlay.BackColor = System.Drawing.Color.Transparent;
-            this.lbl_Overlay.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbl_Overlay.Font = new System.Drawing.Font("Script MT Bold", 60F);
-            this.lbl_Overlay.Location = new System.Drawing.Point(0, 0);
-            this.lbl_Overlay.Name = "lbl_Overlay";
-            this.lbl_Overlay.Size = new System.Drawing.Size(457, 457);
-            this.lbl_Overlay.TabIndex = 0;
-            this.lbl_Overlay.Text = "Start Game";
-            this.lbl_Overlay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbl_Overlay.Click += new System.EventHandler(this.lbl_Overlay_Click);
             // 
             // layout_rightALL
             // 
@@ -457,6 +434,29 @@
             this.lbl_Batch.MouseEnter += new System.EventHandler(this.lbl_Restart_MouseEnter);
             this.lbl_Batch.MouseLeave += new System.EventHandler(this.lbl_Restart_MouseLeave);
             // 
+            // panel_Game
+            // 
+            this.panel_Game.BackColor = System.Drawing.Color.DarkOliveGreen;
+            this.panel_Game.Controls.Add(this.lbl_Overlay);
+            this.panel_Game.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel_Game.Location = new System.Drawing.Point(0, 0);
+            this.panel_Game.Name = "panel_Game";
+            this.panel_Game.Size = new System.Drawing.Size(457, 457);
+            this.panel_Game.TabIndex = 0;
+            // 
+            // lbl_Overlay
+            // 
+            this.lbl_Overlay.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_Overlay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbl_Overlay.Font = new System.Drawing.Font("Script MT Bold", 60F);
+            this.lbl_Overlay.Location = new System.Drawing.Point(0, 0);
+            this.lbl_Overlay.Name = "lbl_Overlay";
+            this.lbl_Overlay.Size = new System.Drawing.Size(457, 457);
+            this.lbl_Overlay.TabIndex = 0;
+            this.lbl_Overlay.Text = "Start Game";
+            this.lbl_Overlay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbl_Overlay.Click += new System.EventHandler(this.lbl_Overlay_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -472,7 +472,6 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.panel_Game.ResumeLayout(false);
             this.layout_rightALL.ResumeLayout(false);
             this.layout_rightALL.PerformLayout();
             this.layout_NextUp.ResumeLayout(false);
@@ -484,6 +483,7 @@
             this.layout_Batch.ResumeLayout(false);
             this.layout_Batch.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.num_batch)).EndInit();
+            this.panel_Game.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

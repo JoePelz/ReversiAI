@@ -7,18 +7,19 @@ using System.Threading.Tasks;
 
 namespace ReversiAI {
     public class Controller {
-        public enum Player { Human, Random, Max, Min, First, Tree, Negamax }
+        public enum Player { Human, Random, Max, Min, First, BestLeaf, Negamax, ProofNumber }
         public static string[] players = new string[] {
             "Human", "AI Random", "AI Maximize", "AI Minimize", "AI First",
-            "Full Tree", "NegaMax"};
+            "Best Leaf", "NegaMax", "ProofNumber"};
         public static IReversiAI getAI(AIConfiguration cfg) {
             switch (cfg.AI) {
                 case Player.Max: return new AIMaximize();
                 case Player.Min: return new AIMinimize();
                 case Player.Random: return new AIRandom();
                 case Player.First: return new AIFirst();
-                case Player.Tree: return new AITreeAll();
+                case Player.BestLeaf: return new AITreeAll();
                 case Player.Negamax: return new AINegaMax();
+                case Player.ProofNumber: return new AIProofNumber();
                 default: return null;
             }
         }
@@ -135,7 +136,7 @@ namespace ReversiAI {
             gui.updateUI(state);
 
             //Check for game over
-            int winner = getWinner(state);
+            int winner = GameState.getWinner(state);
             //Update UI to show winner
             if (winner > 0) {
                 gui.setWinner(winner);
@@ -168,18 +169,18 @@ namespace ReversiAI {
 
         public static int applyMoveBatch(ref GameState state, int x, int y) {
             state = GameState.getTransformedBoard(state, x, y);
-            return getWinner(state);
+            return GameState.getWinner(state);
         }
 
         public static int playGame(Controller ctrl, AIConfiguration p1, AIConfiguration p2) {
             int winner = 0;
             IReversiAI ai1 = getAI(p1);
-            ai1.setConfiguration(p1);
             IReversiAI ai2 = getAI(p2);
-            ai2.setConfiguration(p2);
             if (ai1 == null || ai2 == null) {
                 return winner;
             }
+            ai1.setConfiguration(p1);
+            ai2.setConfiguration(p2);
 
             byte move;
             GameState state = GameState.createInitialSetup();
@@ -219,26 +220,6 @@ namespace ReversiAI {
             }
         }
 
-        /// <summary>
-        /// Determine if a game is over and if so, who the winner is.
-        /// </summary>
-        /// <param name="state">The game board to check for a winner</param>
-        /// <returns>return 0 if no winner, return 1 if player 1 won, 
-        /// return 2 if player 2 won, return 3 if tie game.</returns>
-        public static int getWinner(GameState state) {
-            byte[] moves = GameState.getValidMoves(state, (byte)(state.nextTurn));
-            if (moves.Any((v) => { return v != 0; })) {
-                return 0;
-            }
-            int black_counter = 0, white_counter = 0;
-            for (int i = 0; i < 64; i++) {
-                if (state.squares[i] == 1) white_counter++;
-                else if (state.squares[i] == 2) black_counter++;
-            }
-            if (white_counter == black_counter) return 3;
-            return white_counter > black_counter ? 1 : 2;
-        }
-        
         /// <summary>
         /// Get the ai representing the current player. 
         /// Null is returned if it is a human's turn.

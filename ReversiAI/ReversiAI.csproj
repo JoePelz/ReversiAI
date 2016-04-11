@@ -93,6 +93,7 @@
     <Compile Include="GameStats.cs" />
     <Compile Include="AINegaMax.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="AIProofNumber.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IReversiAI.cs" />
     <Compile Include="TimeProfiler.cs" />
