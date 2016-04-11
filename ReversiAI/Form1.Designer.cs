@@ -184,7 +184,6 @@
             this.layout_Scores.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.layout_Scores.Size = new System.Drawing.Size(292, 39);
             this.layout_Scores.TabIndex = 2;
-            this.layout_Scores.Visible = false;
             // 
             // lbl_Black
             // 

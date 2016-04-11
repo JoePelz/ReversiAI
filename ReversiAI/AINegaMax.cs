@@ -72,10 +72,10 @@ namespace ReversiAI {
         /// <param name="beta"></param>
         /// <param name="player">1 means player 1, -1 means player 2</param>
         private Score negamax_pruning(GameState node, int depth, int alpha, int beta, int player) {
-            statesVisited++;
             if (depth == 0) {
                 return new Score(255, player * evaluateBoard(node));
             }
+            statesVisited++;
 
             var allMoves = GameState.getFilterValidMoves(node, node.nextTurn);
             if (allMoves.Length == 0) {
@@ -92,7 +92,7 @@ namespace ReversiAI {
                     bestValue.move = move;
                 }
                 if (v.value > alpha) alpha = v.value;
-                if (alpha > beta) {
+                if (alpha >= beta) {
                     break;
                 }
             }
