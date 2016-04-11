@@ -7,5 +7,9 @@ using System.Threading.Tasks;
 namespace ReversiAI {
     public interface IReversiAI {
         byte getNextMove(GameState state);
+
+        void setConfiguration(Dictionary<string, object> config);
+
+        Dictionary<string, double> getStats();
     }
 }

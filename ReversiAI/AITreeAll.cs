@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ReversiAI {
     public class AITreeAll : IReversiAI {
+        Dictionary<string, double> stats = new Dictionary<string, double>();
         private byte levels;
         private int statesVisited;
         private Node root;
@@ -48,7 +49,11 @@ namespace ReversiAI {
             return best;
         }
 
-        //reuse the game tree if possible!
+        /// <summary>
+        /// Attempt to build this turns game tree from the previous turn's game tree. 
+        /// Effectively move down a branch and discard the old states and branches.
+        /// </summary>
+        /// <param name="state">The state to update to</param>
         private void updateRoot(GameState state) {
             if (root != null) {
                 foreach (var kvp in root.children) {
@@ -59,6 +64,14 @@ namespace ReversiAI {
                 }
             }
             root = new Node(state);
+        }
+
+        public void setConfiguration(Dictionary<string, object> config) {
+            //do nothing--yet!
+        }
+
+        public Dictionary<string, double> getStats() {
+            return stats;
         }
 
         /// <summary>
@@ -167,10 +180,24 @@ namespace ReversiAI {
                 return numTilesOwned + numStableTiles * 64 - numLostStableTiles * 64;
             }
 
+            /// <summary>
+            /// Counts the number of tiles owned by the given player on the board. 
+            /// I.e. Answers the question: "how many tiles does white have?"
+            /// </summary>
+            /// <param name="state">The game configuration to examine</param>
+            /// <param name="player">The player who's tiles are to be counted</param>
+            /// <returns>The number of tiles on the given board owned by the given player</returns>
             private int getTilesOwned(GameState state, byte player) {
                 return state.squares.Count((b) => { return b == player; });
             }
 
+            /// <summary>
+            /// Counts the value of the tiles owned by the given player on the board, 
+            /// with non-uniform tile values based on location.
+            /// </summary>
+            /// <param name="state">The game configuration to examine</param>
+            /// <param name="player">The player who's tiles are to be counted</param>
+            /// <returns>The weighted value of the tiles on the given board owned by the given player</returns>
             private int getWeightedTilesBonus(GameState state, byte player) {
                 int count = 0;
                 const int cornerValue = 3; //corner value
@@ -235,6 +262,13 @@ namespace ReversiAI {
                 return count;
             }
 
+            /// <summary>
+            /// Counts the number of unchangeable tiles on the board owned by a player. 
+            /// Unchangeable tiles have no possible way of being flipped to the other color.
+            /// </summary>
+            /// <param name="state">The game configuration to examine.</param>
+            /// <param name="player">The player to count the stable tiles of.</param>
+            /// <returns>The weighted value of the tiels on the given board owned by the given player</returns>
             private int getStableTiles(GameState state, byte player) {
                 int count = 0;
                 for(int i = 0; i < 64; i++) {

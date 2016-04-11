@@ -33,7 +33,12 @@ namespace ReversiAI {
         private GameState state;
         private Form1 gui;
         private bool humanTurn;
+
+        private int batchGamesComplete;
         private int[] batchResults;
+        Dictionary<string, double> batchStatsP1;
+        Dictionary<string, double> batchStatsP2;
+
         public bool HumanTurn { get { return humanTurn; } }
 
         public Controller(Form1 owner) {
@@ -134,12 +139,22 @@ namespace ReversiAI {
             }
         }
 
+        public void printStats(int player) {
+            if (player == 1) {
+                if (player1 == null) return;
+                gui.displayStats(player1.getStats(), "Player 1: ", "Game Stats (thus far)");
+            } else {
+                if (player2 == null) return;
+                gui.displayStats(player2.getStats(), "Player 2: ", "Game Stats (thus far)");
+            }
+        }
+
         public static int applyMoveBatch(ref GameState state, int x, int y) {
             state = GameState.getTransformedBoard(state, x, y);
             return getWinner(state);
         }
 
-        public static int playGame(Player p1, Player p2) {
+        public static int playGame(Controller ctrl, Player p1, Player p2) {
             int winner = 0;
             IReversiAI ai1 = getAI(p1);
             IReversiAI ai2 = getAI(p2);
@@ -156,25 +171,42 @@ namespace ReversiAI {
                     move = ai2.getNextMove(state);
                 winner = applyMoveBatch(ref state, move & 7, move >> 3);
             }
+            ctrl.updateBatchResults(winner, ai1, ai2);
             return winner;
         }
 
         public void doBatch(int numGames) {
+            batchGamesComplete = 0;
             batchResults = new int[4];
+            batchStatsP1 = new Dictionary<string, double>();
+            batchStatsP2 = new Dictionary<string, double>();
             Array.Clear(batchResults, 0, 4);
             Task[] gamesToPlay = new Task[numGames];
             Player p1 = gui.getPlayerSelection(1);
             Player p2 = gui.getPlayerSelection(2);
             for (int i = 0; i < numGames; i++) {
-                gamesToPlay[i] = Task.Factory.StartNew(() => { updateBatchResults(playGame(p1, p2)); });
+                gamesToPlay[i] = Task.Factory.StartNew(() => { playGame(this, p1, p2); });
             }
             Task.WaitAll(gamesToPlay);
-            gui.batchComplete(batchResults);
+            gui.batchComplete(batchResults, batchStatsP1, batchStatsP2);
         }
 
-        public void updateBatchResults(int result) {
+        public void updateBatchResults(int result, IReversiAI p1, IReversiAI p2) {
             lock(this) {
+                batchGamesComplete++;
                 batchResults[result]++;
+                mergeStats(batchStatsP1, p1.getStats());
+                mergeStats(batchStatsP2, p2.getStats());
+            }
+        }
+
+        private void mergeStats(Dictionary<string, double> into, Dictionary<string, double> from) {
+            foreach (var key in from.Keys) {
+                if (into.ContainsKey(key)) {
+                    into[key] = (into[key] * (batchGamesComplete - 1) + from[key]) / batchGamesComplete;
+                } else {
+                    into[key] = from[key];
+                }
             }
         }
 

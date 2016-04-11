@@ -48,12 +48,12 @@ namespace ReversiAI {
             }
             for (int x = 2; x < 6; x++) {
                 for (int y = 2; y < 6; y++) {
-                    testBlackbox.squares[x | y << 3] = 1;
+                    testWhitebox.squares[x | y << 3] = 1;
                 }
             }
             for (int x = 2; x < 6; x++) {
                 for (int y = 2; y < 6; y++) {
-                    testWhitebox.squares[x | y << 3] = 2;
+                    testBlackbox.squares[x | y << 3] = 2;
                 }
             }
         }

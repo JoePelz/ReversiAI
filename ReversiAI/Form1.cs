@@ -20,10 +20,10 @@ namespace ReversiAI {
             panel_Game.eClicked += eGameClick;
             lbl_Overlay.BackColor = Color.FromArgb(192, 160, 192, 160);
             updateUI(GameState.createInitialSetup());
-            combo_p1.Items.AddRange(Controller.players);
             combo_p2.Items.AddRange(Controller.players);
-            combo_p1.SelectedIndex = 0;
+            combo_p1.Items.AddRange(Controller.players);
             combo_p2.SelectedIndex = 0;
+            combo_p1.SelectedIndex = 0;
             controller = new Controller(this);
         }
 
@@ -115,10 +115,10 @@ namespace ReversiAI {
                 lbl_P1.Font.Style, lbl_P1.Font.Unit);
             lbl_P2.Font = new Font(lbl_P2.Font.Name, size * 2 / 5,
                 lbl_P2.Font.Style, lbl_P2.Font.Unit);
-            combo_p1.Font = new Font(combo_p1.Font.Name, size * 2 / 6,
-                combo_p1.Font.Style, combo_p1.Font.Unit);
-            combo_p2.Font = new Font(combo_p2.Font.Name, size * 2 / 6,
+            combo_p2.Font = new Font(combo_p2.Font.Name, size * 2 / 8,
                 combo_p2.Font.Style, combo_p2.Font.Unit);
+            combo_p1.Font = new Font(combo_p1.Font.Name, size * 2 / 8,
+                combo_p1.Font.Style, combo_p1.Font.Unit);
 
             lbl_Batch.Font = new Font(lbl_Batch.Font.Name, size * 3 / 5,
                 lbl_Batch.Font.Style, lbl_Batch.Font.Unit);
@@ -138,17 +138,29 @@ namespace ReversiAI {
             if (lbl_Overlay.Text.Equals("Start Game")) {
                 controller.startGame();
                 lbl_Overlay.Visible = false;
-                combo_p1.Enabled = false;
                 combo_p2.Enabled = false;
+                combo_p1.Enabled = false;
             }
         }
 
-        internal void batchComplete(int[] batchResults) {
+        internal void batchComplete(int[] batchResults, Dictionary<string, double> p1, Dictionary<string, double> p2) {
             MessageBox.Show("Batch Results:"
                 + "\nError cases: " + batchResults[0]
                 + "\nPlayer 1 wins: " + batchResults[1]
                 + "\nPlayer 2 wins: " + batchResults[2]
                 + "\nTie games: " + batchResults[3], "Batch Complete!");
+            displayStats(p1, "Player 1:", "Batch Stats");
+            displayStats(p2, "Player 2:", "Batch Stats");
+        }
+
+        public void displayStats(Dictionary<string, double> stats, string caption, string title) {
+            StringBuilder sb = new StringBuilder(caption + "\n");
+
+            foreach (var kvp in stats) {
+                sb.Append(kvp.Key + kvp.Value + "\n");
+            }
+
+            MessageBox.Show(sb.ToString(), title);
         }
 
         private void lbl_Restart_MouseEnter(object sender, EventArgs e) {
@@ -162,14 +174,22 @@ namespace ReversiAI {
         private void lbl_Restart_Click(object sender, EventArgs e) {
             lbl_Overlay.Text = "Start Game";
             lbl_Overlay.Visible = true;
-            combo_p1.Enabled = true;
             combo_p2.Enabled = true;
+            combo_p1.Enabled = true;
             controller.resetGame();
         }
 
         private void lbl_Batch_Click(object sender, EventArgs e) {
             int numGames = (int)num_batch.Value;
             controller.doBatch(numGames);
+        }
+
+        private void lbl_stats_Click(object sender, EventArgs e) {
+            if (sender == lbl_statsP1) {
+                controller.printStats(1);
+            } else if (sender == lbl_statsP2) {
+                controller.printStats(2);
+            }
         }
     }
 }

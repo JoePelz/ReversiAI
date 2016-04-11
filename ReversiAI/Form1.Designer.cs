@@ -28,8 +28,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.panel_Game = new ReversiAI.GamePanel(this.components);
-            this.lbl_Overlay = new System.Windows.Forms.Label();
             this.tableLayout_ControlsMaster = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.lblCurrentPlayer = new System.Windows.Forms.Label();
@@ -41,24 +39,28 @@
             this.lbl_BlackCounter = new System.Windows.Forms.Label();
             this.lbl_Restart = new System.Windows.Forms.Label();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.combo_p1 = new System.Windows.Forms.ComboBox();
+            this.lbl_statsP2 = new System.Windows.Forms.Label();
             this.combo_p2 = new System.Windows.Forms.ComboBox();
+            this.combo_p1 = new System.Windows.Forms.ComboBox();
             this.lbl_P1 = new System.Windows.Forms.Label();
             this.lbl_P2 = new System.Windows.Forms.Label();
+            this.lbl_statsP1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.num_batch = new System.Windows.Forms.NumericUpDown();
             this.lbl_Batch = new System.Windows.Forms.Label();
+            this.panel_Game = new ReversiAI.GamePanel(this.components);
+            this.lbl_Overlay = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.panel_Game.SuspendLayout();
             this.tableLayout_ControlsMaster.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.num_batch)).BeginInit();
+            this.panel_Game.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -78,29 +80,6 @@
             this.splitContainer1.SplitterDistance = 457;
             this.splitContainer1.TabIndex = 0;
             this.splitContainer1.TabStop = false;
-            // 
-            // panel_Game
-            // 
-            this.panel_Game.BackColor = System.Drawing.Color.DarkOliveGreen;
-            this.panel_Game.Controls.Add(this.lbl_Overlay);
-            this.panel_Game.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel_Game.Location = new System.Drawing.Point(0, 0);
-            this.panel_Game.Name = "panel_Game";
-            this.panel_Game.Size = new System.Drawing.Size(457, 405);
-            this.panel_Game.TabIndex = 0;
-            // 
-            // lbl_Overlay
-            // 
-            this.lbl_Overlay.BackColor = System.Drawing.Color.Transparent;
-            this.lbl_Overlay.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbl_Overlay.Font = new System.Drawing.Font("Script MT Bold", 60F);
-            this.lbl_Overlay.Location = new System.Drawing.Point(0, 0);
-            this.lbl_Overlay.Name = "lbl_Overlay";
-            this.lbl_Overlay.Size = new System.Drawing.Size(457, 405);
-            this.lbl_Overlay.TabIndex = 0;
-            this.lbl_Overlay.Text = "Start Game";
-            this.lbl_Overlay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbl_Overlay.Click += new System.EventHandler(this.lbl_Overlay_Click);
             // 
             // tableLayout_ControlsMaster
             // 
@@ -254,34 +233,40 @@
             this.tableLayoutPanel4.ColumnCount = 2;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel4.Controls.Add(this.combo_p1, 0, 1);
+            this.tableLayoutPanel4.Controls.Add(this.lbl_statsP2, 1, 2);
             this.tableLayoutPanel4.Controls.Add(this.combo_p2, 0, 1);
+            this.tableLayoutPanel4.Controls.Add(this.combo_p1, 0, 1);
             this.tableLayoutPanel4.Controls.Add(this.lbl_P1, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.lbl_P2, 1, 0);
+            this.tableLayoutPanel4.Controls.Add(this.lbl_statsP1, 0, 2);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 200);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 3;
+            this.tableLayoutPanel4.RowCount = 5;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel4.Size = new System.Drawing.Size(292, 151);
             this.tableLayoutPanel4.TabIndex = 4;
             // 
-            // combo_p1
+            // lbl_statsP2
             // 
-            this.combo_p1.AutoCompleteCustomSource.AddRange(new string[] {
-            "Human",
-            "AI Random",
-            "AI Max Captures"});
-            this.combo_p1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.combo_p1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.combo_p1.Font = new System.Drawing.Font("Tahoma", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.combo_p1.FormattingEnabled = true;
-            this.combo_p1.Location = new System.Drawing.Point(3, 33);
-            this.combo_p1.Name = "combo_p1";
-            this.combo_p1.Size = new System.Drawing.Size(140, 31);
-            this.combo_p1.TabIndex = 8;
+            this.lbl_statsP2.AutoSize = true;
+            this.lbl_statsP2.BackColor = System.Drawing.Color.Olive;
+            this.lbl_statsP2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbl_statsP2.Font = new System.Drawing.Font("Script MT Bold", 15F);
+            this.lbl_statsP2.Location = new System.Drawing.Point(149, 60);
+            this.lbl_statsP2.Name = "lbl_statsP2";
+            this.lbl_statsP2.Size = new System.Drawing.Size(140, 30);
+            this.lbl_statsP2.TabIndex = 12;
+            this.lbl_statsP2.Tag = "p2";
+            this.lbl_statsP2.Text = "Stats";
+            this.lbl_statsP2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbl_statsP2.Click += new System.EventHandler(this.lbl_stats_Click);
+            this.lbl_statsP2.MouseEnter += new System.EventHandler(this.lbl_Restart_MouseEnter);
+            this.lbl_statsP2.MouseLeave += new System.EventHandler(this.lbl_Restart_MouseLeave);
             // 
             // combo_p2
             // 
@@ -291,12 +276,27 @@
             "AI Max Captures"});
             this.combo_p2.Dock = System.Windows.Forms.DockStyle.Top;
             this.combo_p2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.combo_p2.Font = new System.Drawing.Font("Tahoma", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.combo_p2.Font = new System.Drawing.Font("Tahoma", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.combo_p2.FormattingEnabled = true;
             this.combo_p2.Location = new System.Drawing.Point(149, 33);
             this.combo_p2.Name = "combo_p2";
-            this.combo_p2.Size = new System.Drawing.Size(140, 31);
-            this.combo_p2.TabIndex = 7;
+            this.combo_p2.Size = new System.Drawing.Size(140, 26);
+            this.combo_p2.TabIndex = 8;
+            // 
+            // combo_p1
+            // 
+            this.combo_p1.AutoCompleteCustomSource.AddRange(new string[] {
+            "Human",
+            "AI Random",
+            "AI Max Captures"});
+            this.combo_p1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.combo_p1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.combo_p1.Font = new System.Drawing.Font("Tahoma", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.combo_p1.FormattingEnabled = true;
+            this.combo_p1.Location = new System.Drawing.Point(3, 33);
+            this.combo_p1.Name = "combo_p1";
+            this.combo_p1.Size = new System.Drawing.Size(140, 26);
+            this.combo_p1.TabIndex = 7;
             // 
             // lbl_P1
             // 
@@ -323,6 +323,23 @@
             this.lbl_P2.TabIndex = 10;
             this.lbl_P2.Text = "Player 2";
             this.lbl_P2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbl_statsP1
+            // 
+            this.lbl_statsP1.AutoSize = true;
+            this.lbl_statsP1.BackColor = System.Drawing.Color.Olive;
+            this.lbl_statsP1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbl_statsP1.Font = new System.Drawing.Font("Script MT Bold", 15F);
+            this.lbl_statsP1.Location = new System.Drawing.Point(3, 60);
+            this.lbl_statsP1.Name = "lbl_statsP1";
+            this.lbl_statsP1.Size = new System.Drawing.Size(140, 30);
+            this.lbl_statsP1.TabIndex = 11;
+            this.lbl_statsP1.Tag = "p1";
+            this.lbl_statsP1.Text = "Stats";
+            this.lbl_statsP1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbl_statsP1.Click += new System.EventHandler(this.lbl_stats_Click);
+            this.lbl_statsP1.MouseEnter += new System.EventHandler(this.lbl_Restart_MouseEnter);
+            this.lbl_statsP1.MouseLeave += new System.EventHandler(this.lbl_Restart_MouseLeave);
             // 
             // tableLayoutPanel1
             // 
@@ -375,6 +392,29 @@
             this.lbl_Batch.MouseEnter += new System.EventHandler(this.lbl_Restart_MouseEnter);
             this.lbl_Batch.MouseLeave += new System.EventHandler(this.lbl_Restart_MouseLeave);
             // 
+            // panel_Game
+            // 
+            this.panel_Game.BackColor = System.Drawing.Color.DarkOliveGreen;
+            this.panel_Game.Controls.Add(this.lbl_Overlay);
+            this.panel_Game.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel_Game.Location = new System.Drawing.Point(0, 0);
+            this.panel_Game.Name = "panel_Game";
+            this.panel_Game.Size = new System.Drawing.Size(457, 405);
+            this.panel_Game.TabIndex = 0;
+            // 
+            // lbl_Overlay
+            // 
+            this.lbl_Overlay.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_Overlay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbl_Overlay.Font = new System.Drawing.Font("Script MT Bold", 60F);
+            this.lbl_Overlay.Location = new System.Drawing.Point(0, 0);
+            this.lbl_Overlay.Name = "lbl_Overlay";
+            this.lbl_Overlay.Size = new System.Drawing.Size(457, 405);
+            this.lbl_Overlay.TabIndex = 0;
+            this.lbl_Overlay.Text = "Start Game";
+            this.lbl_Overlay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbl_Overlay.Click += new System.EventHandler(this.lbl_Overlay_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -390,7 +430,6 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.panel_Game.ResumeLayout(false);
             this.tableLayout_ControlsMaster.ResumeLayout(false);
             this.tableLayout_ControlsMaster.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
@@ -402,6 +441,7 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.num_batch)).EndInit();
+            this.panel_Game.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -422,13 +462,15 @@
         private System.Windows.Forms.Label lbl_Overlay;
         private System.Windows.Forms.Label lbl_Restart;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
-        private System.Windows.Forms.ComboBox combo_p1;
         private System.Windows.Forms.ComboBox combo_p2;
+        private System.Windows.Forms.ComboBox combo_p1;
         private System.Windows.Forms.Label lbl_P1;
         private System.Windows.Forms.Label lbl_P2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.NumericUpDown num_batch;
         private System.Windows.Forms.Label lbl_Batch;
+        private System.Windows.Forms.Label lbl_statsP2;
+        private System.Windows.Forms.Label lbl_statsP1;
     }
 }
 

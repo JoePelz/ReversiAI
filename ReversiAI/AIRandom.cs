@@ -14,10 +14,17 @@ namespace ReversiAI {
 
     public class AIRandom : IReversiAI {
         private Random rng = RNGG.getRNG();
+        Dictionary<string, double> stats = new Dictionary<string, double>();
+        int turnsTaken;
+        int choices;
+        
         public byte getNextMove(GameState state) {
             var moves = GameState.getValidMoves(state, state.nextTurn);
             int options;
             options = moves.Count((b) => { return b > 0; });
+            choices += options;
+            turnsTaken++;
+
             for (byte i = 0; i < 64; i++) {
                 if (moves[i] > 0) {
                     if (rng.Next(options) == 0) {
@@ -28,6 +35,15 @@ namespace ReversiAI {
                 }
             }
             return 255;
+        }
+
+        public Dictionary<string, double> getStats() {
+            stats["Average Branching: "] = (double)choices / turnsTaken;
+            return stats;
+        }
+
+        public void setConfiguration(Dictionary<string, object> config) {
+            //do nothing - no configuration possible
         }
     }
 }

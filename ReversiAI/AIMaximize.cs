@@ -7,8 +7,15 @@ using System.Threading.Tasks;
 
 namespace ReversiAI {
     public class AIMaximize : IReversiAI {
+        Dictionary<string, double> stats = new Dictionary<string, double>();
+        int turnsTaken;
+        int choices;
+
         public byte getNextMove(GameState state) {
             var moves = GameState.getValidMoves(state, state.nextTurn);
+            choices += moves.Count((b) => { return b > 0; });
+            turnsTaken++;
+
             byte best = 255;
             int tempCount, bestTurns = 0;
             GameState temp;
@@ -23,6 +30,15 @@ namespace ReversiAI {
                 }
             }
             return best;
+        }
+
+        public Dictionary<string, double> getStats() {
+            stats["Average Branching: "] = (double)choices / turnsTaken;
+            return stats;
+        }
+
+        public void setConfiguration(Dictionary<string, object> config) {
+            //do nothing -- no configuration possible
         }
     }
 }
