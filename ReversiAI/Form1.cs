@@ -117,10 +117,18 @@ namespace ReversiAI {
                 lbl_P1.Font.Style, lbl_P1.Font.Unit);
             lbl_P2.Font = new Font(lbl_P2.Font.Name, size * 2 / 5,
                 lbl_P2.Font.Style, lbl_P2.Font.Unit);
-            combo_p2.Font = new Font(combo_p2.Font.Name, size * 2 / 8,
-                combo_p2.Font.Style, combo_p2.Font.Unit);
             combo_p1.Font = new Font(combo_p1.Font.Name, size * 2 / 8,
                 combo_p1.Font.Style, combo_p1.Font.Unit);
+            combo_p2.Font = new Font(combo_p2.Font.Name, size * 2 / 8,
+                combo_p2.Font.Style, combo_p2.Font.Unit);
+            lbl_statsP1.Font = new Font(lbl_statsP1.Font.Name, size * 2 / 5,
+                lbl_statsP1.Font.Style, lbl_statsP1.Font.Unit);
+            lbl_statsP2.Font = new Font(lbl_statsP2.Font.Name, size * 2 / 5,
+                lbl_statsP2.Font.Style, lbl_statsP2.Font.Unit);
+            lbl_configP1.Font = new Font(lbl_configP1.Font.Name, size * 2 / 5,
+                lbl_configP1.Font.Style, lbl_configP1.Font.Unit);
+            lbl_configP2.Font = new Font(lbl_configP2.Font.Name, size * 2 / 5,
+                lbl_configP2.Font.Style, lbl_configP2.Font.Unit);
 
             lbl_Batch.Font = new Font(lbl_Batch.Font.Name, size * 3 / 5,
                 lbl_Batch.Font.Style, lbl_Batch.Font.Unit);

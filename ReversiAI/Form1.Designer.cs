@@ -45,8 +45,8 @@
             this.lbl_P1 = new System.Windows.Forms.Label();
             this.lbl_P2 = new System.Windows.Forms.Label();
             this.lbl_statsP1 = new System.Windows.Forms.Label();
-            this.lbl_config_p1 = new System.Windows.Forms.Label();
-            this.lbl_config_p2 = new System.Windows.Forms.Label();
+            this.lbl_configP1 = new System.Windows.Forms.Label();
+            this.lbl_configP2 = new System.Windows.Forms.Label();
             this.layout_Batch = new System.Windows.Forms.TableLayoutPanel();
             this.num_batch = new System.Windows.Forms.NumericUpDown();
             this.lbl_Batch = new System.Windows.Forms.Label();
@@ -241,8 +241,8 @@
             this.layout_Options.Controls.Add(this.lbl_P1, 0, 0);
             this.layout_Options.Controls.Add(this.lbl_P2, 1, 0);
             this.layout_Options.Controls.Add(this.lbl_statsP1, 0, 2);
-            this.layout_Options.Controls.Add(this.lbl_config_p1, 0, 4);
-            this.layout_Options.Controls.Add(this.lbl_config_p2, 1, 4);
+            this.layout_Options.Controls.Add(this.lbl_configP1, 0, 4);
+            this.layout_Options.Controls.Add(this.lbl_configP2, 1, 4);
             this.layout_Options.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layout_Options.Location = new System.Drawing.Point(3, 184);
             this.layout_Options.Name = "layout_Options";
@@ -349,39 +349,39 @@
             this.lbl_statsP1.MouseEnter += new System.EventHandler(this.lbl_Restart_MouseEnter);
             this.lbl_statsP1.MouseLeave += new System.EventHandler(this.lbl_Restart_MouseLeave);
             // 
-            // lbl_config_p1
+            // lbl_configP1
             // 
-            this.lbl_config_p1.AutoSize = true;
-            this.lbl_config_p1.BackColor = System.Drawing.Color.Olive;
-            this.lbl_config_p1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbl_config_p1.Font = new System.Drawing.Font("Script MT Bold", 15F);
-            this.lbl_config_p1.Location = new System.Drawing.Point(3, 124);
-            this.lbl_config_p1.Name = "lbl_config_p1";
-            this.lbl_config_p1.Size = new System.Drawing.Size(140, 31);
-            this.lbl_config_p1.TabIndex = 13;
-            this.lbl_config_p1.Tag = "p1";
-            this.lbl_config_p1.Text = "Configure AI";
-            this.lbl_config_p1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbl_config_p1.Click += new System.EventHandler(this.configure_AI);
-            this.lbl_config_p1.MouseEnter += new System.EventHandler(this.lbl_Restart_MouseEnter);
-            this.lbl_config_p1.MouseLeave += new System.EventHandler(this.lbl_Restart_MouseLeave);
+            this.lbl_configP1.AutoSize = true;
+            this.lbl_configP1.BackColor = System.Drawing.Color.Olive;
+            this.lbl_configP1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbl_configP1.Font = new System.Drawing.Font("Script MT Bold", 15F);
+            this.lbl_configP1.Location = new System.Drawing.Point(3, 124);
+            this.lbl_configP1.Name = "lbl_configP1";
+            this.lbl_configP1.Size = new System.Drawing.Size(140, 31);
+            this.lbl_configP1.TabIndex = 13;
+            this.lbl_configP1.Tag = "p1";
+            this.lbl_configP1.Text = "Configure AI";
+            this.lbl_configP1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbl_configP1.Click += new System.EventHandler(this.configure_AI);
+            this.lbl_configP1.MouseEnter += new System.EventHandler(this.lbl_Restart_MouseEnter);
+            this.lbl_configP1.MouseLeave += new System.EventHandler(this.lbl_Restart_MouseLeave);
             // 
-            // lbl_config_p2
+            // lbl_configP2
             // 
-            this.lbl_config_p2.AutoSize = true;
-            this.lbl_config_p2.BackColor = System.Drawing.Color.Olive;
-            this.lbl_config_p2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbl_config_p2.Font = new System.Drawing.Font("Script MT Bold", 15F);
-            this.lbl_config_p2.Location = new System.Drawing.Point(149, 124);
-            this.lbl_config_p2.Name = "lbl_config_p2";
-            this.lbl_config_p2.Size = new System.Drawing.Size(140, 31);
-            this.lbl_config_p2.TabIndex = 14;
-            this.lbl_config_p2.Tag = "p2";
-            this.lbl_config_p2.Text = "Configure AI";
-            this.lbl_config_p2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbl_config_p2.Click += new System.EventHandler(this.configure_AI);
-            this.lbl_config_p2.MouseEnter += new System.EventHandler(this.lbl_Restart_MouseEnter);
-            this.lbl_config_p2.MouseLeave += new System.EventHandler(this.lbl_Restart_MouseLeave);
+            this.lbl_configP2.AutoSize = true;
+            this.lbl_configP2.BackColor = System.Drawing.Color.Olive;
+            this.lbl_configP2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbl_configP2.Font = new System.Drawing.Font("Script MT Bold", 15F);
+            this.lbl_configP2.Location = new System.Drawing.Point(149, 124);
+            this.lbl_configP2.Name = "lbl_configP2";
+            this.lbl_configP2.Size = new System.Drawing.Size(140, 31);
+            this.lbl_configP2.TabIndex = 14;
+            this.lbl_configP2.Tag = "p2";
+            this.lbl_configP2.Text = "Configure AI";
+            this.lbl_configP2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbl_configP2.Click += new System.EventHandler(this.configure_AI);
+            this.lbl_configP2.MouseEnter += new System.EventHandler(this.lbl_Restart_MouseEnter);
+            this.lbl_configP2.MouseLeave += new System.EventHandler(this.lbl_Restart_MouseLeave);
             // 
             // layout_Batch
             // 
@@ -464,7 +464,6 @@
             this.BackColor = System.Drawing.Color.DarkGreen;
             this.ClientSize = new System.Drawing.Size(759, 457);
             this.Controls.Add(this.splitContainer1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Reversi";
@@ -513,8 +512,8 @@
         private System.Windows.Forms.Label lbl_Batch;
         private System.Windows.Forms.Label lbl_statsP2;
         private System.Windows.Forms.Label lbl_statsP1;
-        private System.Windows.Forms.Label lbl_config_p1;
-        private System.Windows.Forms.Label lbl_config_p2;
+        private System.Windows.Forms.Label lbl_configP1;
+        private System.Windows.Forms.Label lbl_configP2;
     }
 }
 

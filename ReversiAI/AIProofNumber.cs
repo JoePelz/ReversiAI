@@ -96,7 +96,11 @@ namespace ReversiAI {
 
         private Node SelectMostProving(Node node) {
             int i = -1;
+            if (node.children.Count() == 0) {
+                return node;
+            }
             while (node.expanded) {
+                
                 switch (node.type) {
                     case Type.OR:
                         i = 0;

@@ -162,9 +162,10 @@
             // 
             // comboBox1
             // 
+            this.comboBox1.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.comboBox1.Font = new System.Drawing.Font("Tahoma", 11F);
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(210, 3);
+            this.comboBox1.Location = new System.Drawing.Point(210, 18);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 26);
             this.comboBox1.TabIndex = 7;
@@ -172,8 +173,9 @@
             // 
             // numericUpDown1
             // 
+            this.numericUpDown1.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.numericUpDown1.Font = new System.Drawing.Font("Tahoma", 11F);
-            this.numericUpDown1.Location = new System.Drawing.Point(210, 65);
+            this.numericUpDown1.Location = new System.Drawing.Point(210, 80);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             20,
             0,
@@ -196,8 +198,9 @@
             // 
             // numericUpDown2
             // 
+            this.numericUpDown2.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.numericUpDown2.Font = new System.Drawing.Font("Tahoma", 11F);
-            this.numericUpDown2.Location = new System.Drawing.Point(210, 127);
+            this.numericUpDown2.Location = new System.Drawing.Point(210, 142);
             this.numericUpDown2.Name = "numericUpDown2";
             this.numericUpDown2.Size = new System.Drawing.Size(120, 25);
             this.numericUpDown2.TabIndex = 9;
